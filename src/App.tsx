@@ -2,9 +2,12 @@ import { Route, Routes } from "react-router-dom";
 import MainPage from "./pages/main/MainPage";
 import ThemeWrapper from "./components/Theme";
 import HostPage from "./pages/host/HostPage";
-import JoinPage from "./pages/join/JoinPage";
-import LoginPage from "./components/LoginPage";
+import LoginPage from "./pages/login/LoginPage";
+import SignupPage from "./pages/signup/SignupPage";
+import ProfilePage from "./pages/profile/ProfilePage";
+import ConfirmationPage from "./pages/host/ConfirmationPage";
 import CreateChoicePage from "./pages/choice/CreateChoicePage";
+import ResultsPage from "./pages/results/ResultsPage";
 
 export default function App() {
   return (
@@ -12,8 +15,11 @@ export default function App() {
       <Routes>
         <Route path="" element={<MainPage />} />
         <Route path="/host" element={<HostPage />} />
-        <Route path="/join" element={<JoinPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/confirmation" element={<ConfirmationPage />} />
+        <Route path="/results/:roomId" element={<ResultsPage />} />
         <Route path="/choice/:roomId" element={<CreateChoicePage />} />
       </Routes>
     </ThemeWrapper>
