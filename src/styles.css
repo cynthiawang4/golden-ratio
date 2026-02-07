@@ -1,11 +1,11 @@
 :root {
-  --primary-color: #b490d6;
-  --secondary-color: #b6e1fa;
-  --accent-color: #3c4799;
+  --primary-color: #f5d8c0;
+  --secondary-color: #bca0da;
+  --accent-color: #3e67b9;
   --dark-text: black;
-  --light-text: #fdeac9;
+  --light-text: #fff;
   --error: #faa082;
-  --background: #131f47;
+  --background: #253164;
 }
 
 body {
@@ -22,6 +22,7 @@ body {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10+ */
   user-select: none; /* Standard */
+  font-size: 16px;
 }
 
 input,

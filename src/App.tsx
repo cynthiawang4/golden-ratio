@@ -1,10 +1,17 @@
 import { Route, Routes } from "react-router-dom";
 import MainPage from "./pages/main/MainPage";
+import ThemeWrapper from "./components/Theme";
+import HostPage from "./pages/host/HostPage";
+import JoinPage from "./pages/join/JoinPage";
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="" element={<MainPage />} />
-    </Routes>
+    <ThemeWrapper>
+      <Routes>
+        <Route path="" element={<MainPage />} />
+        <Route path="/host" element={<HostPage />} />
+        <Route path="/join" element={<JoinPage />} />
+      </Routes>
+    </ThemeWrapper>
   );
 }
