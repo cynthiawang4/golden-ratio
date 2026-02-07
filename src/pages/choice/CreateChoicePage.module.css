@@ -6,13 +6,25 @@
   gap: 1rem;
   box-sizing: border-box;
   padding: 1rem;
+  background-color: var(--background);
+}
+
+.titleWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.backButton {
+  color: #fff !important;
 }
 
 .title:global(.MuiTypography-root) {
   color: var(--title-text);
   font-weight: 600;
   line-height: 1;
-  font-size: 3rem;
+  font-size: 2rem;
 }
 
 .choiceSection {
@@ -24,20 +36,90 @@
   gap: 1rem;
 }
 
+& .label:global(.MuiTypography-root) {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
 .textFieldContainer {
   display: flex;
   flex-direction: column;
   flex: 1;
   gap: 1rem;
-
-  & .label:global(.MuiTypography-root) {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--primary-color);
-  }
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0.5rem;
 
   & .choiceTextField {
-    max-height: 250px;
+    width: 100%;
+    flex: 1;
+    & :global(.MuiOutlinedInput-root) {
+      height: 100%;
+    }
+  }
+}
+
+.choiceListWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+  overflow: hidden;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0.5rem;
+
+  & :global(.MuiButton-root) {
+    width: 100%;
+  }
+}
+
+.choiceListContainer {
+  color: var(--paper-color);
+  border: 4px solid var(--accent-color);
+  border-radius: 15px;
+  gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.choiceBlock {
+  background-color: #f6faf3;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1rem;
+  border-radius: 8px;
+  box-sizing: border-box;
+  padding: 0.25rem 0.5rem;
+  align-items: center;
+
+  & :global(.MuiTypography-root) {
+    color: var(--accent-color);
+    text-align: start;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  & .deleteButton {
+    color: #b93e5b;
+    border-radius: 8px;
+
+    & svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      background-color: var(--accent-color);
+    }
   }
 }
 
@@ -46,4 +128,10 @@
     overflow: auto;
     flex-direction: column;
   }
+}
+
+.choiceButton:global(.MuiButton-root) {
+  height: 35px;
+  box-shadow: 0px 5px 0px 0px #f5d8c0;
+  border: 4px solid #f5d8c0;
 }

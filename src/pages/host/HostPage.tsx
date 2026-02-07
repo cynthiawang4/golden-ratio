@@ -1,9 +1,10 @@
-import { Button, TextField, Typography } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 import styles from "./HostPage.module.css";
 import { useId, useState } from "react";
 import EveryoneIcon from "../../images/everyone.svg?react";
 import ForMeIcon from "../../images/for-me.svg?react";
 import { useNavigate } from "react-router-dom";
+import BaseButton from "../../components/BaseButton";
 
 const MAX_TOPIC_LENGTH = 127;
 
@@ -40,14 +41,20 @@ export default function HostPage() {
         Who is providing the choices?
       </Typography>
       <div className={styles.buttonContainer}>
-        <Button onClick={navigateToChoicePage}>
+        <BaseButton
+          onClick={navigateToChoicePage}
+          className={styles.hostButton}
+        >
           <Typography>Everyone</Typography>
           <EveryoneIcon className={styles.everyoneIcon} />
-        </Button>
-        <Button onClick={navigateToChoicePage}>
+        </BaseButton>
+        <BaseButton
+          onClick={navigateToChoicePage}
+          className={styles.hostButton}
+        >
           <Typography>Only Me!</Typography>
           <ForMeIcon className={styles.forMeIcon} />
-        </Button>
+        </BaseButton>
       </div>
     </div>
   );
