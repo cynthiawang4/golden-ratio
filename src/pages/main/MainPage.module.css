@@ -1,18 +1,37 @@
 .mainContainer {
   background-color: var(--background);
+  background-image: url('/src/images/golden-ratio.png');
+  background-size: cover;
+  background-position: center;
   width: 100vw;
   height: 100vh;
   box-sizing: border-box;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
+  position: relative;
+
+  & .logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+  }
+
+  & .contentContainer {
+    width: 66.66%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
 
   & .title:global(.MuiTypography-root) {
-    color: var(--primary-color);
-    font-weight: 700;
-    font-size: 3rem;
+    color: #F8AA69;
+    font-family: 'Lilita One', cursive;
+    font-weight: 500;
+    font-size: 80px;
     text-align: center;
     line-height: 1.5;
     letter-spacing: 0;
@@ -21,7 +40,7 @@
 
 .buttonContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   width: 80%;
   justify-content: center;
@@ -29,7 +48,23 @@
 
   & :global(.MuiButton-root) {
     min-width: fit-content;
-    width: 175px;
-    height: 40px;
+    width: 282px;
+    height: 64px;
+    font-family: 'Kulim Park', sans-serif;
+    font-size: 32px;
+    text-transform: capitalize;
+  }
+}
+
+.loginText {
+  color: #f5d8c0;
+  font-family: Inter, sans-serif;
+  font-size: 24px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
   }
 }
