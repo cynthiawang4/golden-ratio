@@ -22,7 +22,7 @@ const themeOptions: ThemeOptions = {
     // Backgrounds
     background: {
       default: "#253164", // Mid-blue
-      paper: "#1c2b5e", // Dark Navy Card background
+      paper: "#1C254B", // Dark Navy Card background
     },
     // Text
     text: {
@@ -106,7 +106,8 @@ const themeOptions: ThemeOptions = {
     MuiOutlinedInput: {
       styleOverrides: {
         root: ({ theme }) => ({
-          border: `2px solid ${theme.palette.primary.main}`,
+          border: `4px solid ${theme.palette.primary.contrastText}`,
+          backgroundColor: theme.palette.background.paper,
           borderRadius: "30px",
           "& input": {
             color: theme.palette.text.primary,

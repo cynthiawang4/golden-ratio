@@ -1,0 +1,49 @@
+.choiceContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  gap: 1rem;
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+.title:global(.MuiTypography-root) {
+  color: var(--title-text);
+  font-weight: 600;
+  line-height: 1;
+  font-size: 3rem;
+}
+
+.choiceSection {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  gap: 1rem;
+}
+
+.textFieldContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 1rem;
+
+  & .label:global(.MuiTypography-root) {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--primary-color);
+  }
+
+  & .choiceTextField {
+    max-height: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .choiceSection {
+    overflow: auto;
+    flex-direction: column;
+  }
+}
