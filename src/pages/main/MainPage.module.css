@@ -36,6 +36,16 @@
     line-height: 1.5;
     letter-spacing: 0;
   }
+
+  & .title {
+    color: #F8AA69;
+    font-family: 'Lilita One', cursive;
+    font-weight: 500;
+    font-size: 80px;
+    text-align: center;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
 }
 
 .buttonContainer {
@@ -67,4 +77,14 @@
   &:hover {
     text-decoration: underline;
   }
+}
+
+.authLinks {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sep {
+  color: #f5d8c0;
 }
