@@ -1,0 +1,18 @@
+.roomPageContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+  padding: 1rem;
+  overflow: hidden;
+
+  & :global(.MuiTypography-root) {
+    color: var(--error);
+    font-weight: 500;
+    font-size: 2rem;
+    text-align: center;
+  }
+}

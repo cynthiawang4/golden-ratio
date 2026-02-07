@@ -53,6 +53,7 @@
   width: 100%;
   padding: 0 2rem;
   box-sizing: border-box;
+}
 
   & :global(.MuiButton-root) {
     flex: 1;
@@ -94,9 +95,8 @@
       height: 100px;
     }
 
-    & .forMeIcon {
-      width: 56px;
-      height: 65px;
-    }
+  & .forMeIcon {
+    width: 56px;
+    height: 65px;
   }
 }
