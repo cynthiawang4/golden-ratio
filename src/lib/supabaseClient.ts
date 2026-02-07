@@ -13,5 +13,5 @@ export const signOut = () => auth.signOut()
 
 export const onAuthStateChange = (cb: (event: string, session: any) => void) => auth.onAuthStateChange(cb)
 
-export const signInWithGoogle = () =>
-	auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } })
+export const signInWithGoogle = (redirectPath?: string) =>
+	auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}${redirectPath ?? ''}` } })

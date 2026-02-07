@@ -20,7 +20,18 @@ export default function LoginPage() {
         {message && <p className={styles.notice}>{message}</p>}
         <p className={styles.description}>Use Google to sign in to your account.</p>
         <div className={styles.buttonContainer}>
-          <button className={styles.button} onClick={() => signInWithGoogle()}>
+          <button
+            className={styles.button}
+            onClick={() => {
+              // persist return info so after OAuth redirect we can restore topic
+              if (returnTo && state.topic) {
+                try {
+                  sessionStorage.setItem('preAuth', JSON.stringify({ returnTo, topic: state.topic }));
+                } catch (e) {}
+              }
+              signInWithGoogle(returnTo);
+            }}
+          >
             Continue with Google
           </button>
           {message && (

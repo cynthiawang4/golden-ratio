@@ -6,7 +6,7 @@ import {
   IconButton,
   Stack,
   TextField,
-  Typography, Button,
+  Typography,
 } from "@mui/material";
 import BaseButton from "../../components/BaseButton";
 import Trash from "../../images/trash.svg?react";
@@ -23,6 +23,7 @@ export default function CreateChoicePage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [textInput, setTextInput] = useState<string>("");
   const [choices, setChoices] = useState<any[]>([]);
+  const [savedLabels, setSavedLabels] = useState<Set<string>>(new Set());
   const [ownerId, setOwnerId] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
 
@@ -41,7 +42,9 @@ export default function CreateChoicePage() {
         }
 
         const { data: choiceList } = await supabase.from("choices").select("id, label").eq("poll_id", roomId);
-        setChoices((choiceList as any) || []);
+        const labels = ((choiceList as any) || []).map((c: any) => c.label);
+        setChoices(labels);
+        setSavedLabels(new Set(labels));
 
         const { data: userData } = await auth.getUser();
         setUser((userData as any)?.user ?? null);
@@ -61,9 +64,8 @@ export default function CreateChoicePage() {
 
     // 2. Prevent duplicates (Case-insensitive check is usually better)
     if (
-      choices.some(
-        (choice) => choice.toLowerCase() === trimmedInput.toLowerCase(),
-      )
+      choices.some((choice) => choice.toLowerCase() === trimmedInput.toLowerCase()) ||
+      Array.from(savedLabels).some((s) => s.toLowerCase() === trimmedInput.toLowerCase())
     ) {
       //alert("This choice already exists!");
       return;
@@ -76,7 +78,25 @@ export default function CreateChoicePage() {
   };
 
   // CYNTHIA ADD CHOICES TO DATABASE THEY CAN SEND EMPTY
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    if (!roomId) return;
+    try {
+      // insert only new labels not already saved
+      const newLabels = choices.filter((label) => !savedLabels.has(label));
+      if (newLabels.length === 0) {
+        return;
+      }
+      const payload = newLabels.map((label) => ({ poll_id: roomId, label }));
+      const { data: inserted, error } = await supabase.from('choices').insert(payload).select('id,label');
+      if (error) throw error;
+      const insertedLabels = ((inserted as any) || []).map((i: any) => i.label);
+      const newSaved = new Set(savedLabels);
+      insertedLabels.forEach((l: string) => newSaved.add(l));
+      setSavedLabels(newSaved);
+    } catch (e) {
+      console.error('Failed to save choices', e);
+    }
+  };
 
   // CYNTHIA IF HOST DELETE ROOM?? ELSE GO BACK TO LANDING PAGE?
   const handleOnBack = () => {};
@@ -144,12 +164,6 @@ export default function CreateChoicePage() {
                 Done
               </BaseButton>
             </div>
-          </div>
-
-          <div style={{ marginTop: 16 }}>
-            <Button variant="outlined" onClick={handleReveal}>
-              Reveal Rankings
-            </Button>
           </div>
         </>
       )}

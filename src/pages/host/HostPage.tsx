@@ -1,6 +1,6 @@
 import { Button, TextField, Typography } from "@mui/material";
 import styles from "./HostPage.module.css";
-import { useId, useState } from "react";
+import { useId, useEffect, useState } from "react";
 import EveryoneIcon from "../../images/everyone.svg?react";
 import ForMeIcon from "../../images/for-me.svg?react";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,20 @@ export default function HostPage() {
   const navigate = useNavigate();
   const [textInput, setTextInput] = useState<string>("");
   const id = useId();
+
+  // restore topic after OAuth redirect if present
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem('preAuth');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed?.returnTo === '/host' && parsed.topic) {
+          setTextInput(parsed.topic);
+        }
+        sessionStorage.removeItem('preAuth');
+      }
+    } catch (e) {}
+  }, []);
 
   const handleNext = async () => {
     // require host to be signed in before creating poll
