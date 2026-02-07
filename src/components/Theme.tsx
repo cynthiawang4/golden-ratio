@@ -1,4 +1,9 @@
-import { createTheme, ThemeOptions, ThemeProvider } from "@mui/material";
+import {
+  colors,
+  createTheme,
+  ThemeOptions,
+  ThemeProvider,
+} from "@mui/material";
 
 const themeOptions: ThemeOptions = {
   palette: {
@@ -21,7 +26,7 @@ const themeOptions: ThemeOptions = {
     },
     // Text
     text: {
-      primary: "#ffffff",
+      primary: "#F6FAF3",
       secondary: "#f5d8c0", // Using your primary as the sub-text color looks great
       disabled: "rgba(255, 255, 255, 0.5)",
     },
@@ -39,8 +44,8 @@ const themeOptions: ThemeOptions = {
     // Action states
     action: {
       active: "#f5d8c0",
-      hover: "rgba(182, 225, 250, 0.12)",
-      selected: "rgba(182, 225, 250, 0.2)",
+      hover: "#9C70CB",
+      selected: "#1C254B",
       focus: "#b6e1fa",
       disabled: "rgba(253, 234, 201, 0.3)",
       disabledBackground: "rgba(255, 255, 255, 0.12)",
@@ -63,8 +68,9 @@ const themeOptions: ThemeOptions = {
         {
           props: { variant: "secondary" },
           style: ({ theme }) => ({
-            border: `2px solid ${theme.palette.secondary.main}`,
-            color: theme.palette.secondary.main,
+            color: theme.palette.text.primary,
+            backgroundColor: theme.palette.secondary.main,
+            boxShadow: "0px 4px 0px 0px #1C254B",
           }),
         },
         {
@@ -78,8 +84,11 @@ const themeOptions: ThemeOptions = {
       styleOverrides: {
         root: ({ theme }) => ({
           backgroundColor: theme.palette.background.default,
+          textTransform: "none",
+          borderRadius: "10px",
           "&:hover": {
             backgroundColor: theme.palette.action.hover,
+            color: theme.palette.text.primary,
           },
           "&:focus-visible": {
             outline: `2px solid ${theme.palette.action.focus}`,
@@ -91,6 +100,33 @@ const themeOptions: ThemeOptions = {
             color: theme.palette.text.disabled,
             cursor: "not-allowed",
           },
+        }),
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          border: `2px solid ${theme.palette.primary.main}`,
+          borderRadius: "30px",
+          "& input": {
+            color: theme.palette.text.primary,
+          },
+          "&:hover": {
+            backgroundColor: theme.palette.action.hover,
+          },
+          // Error state
+          "&.Mui-error": {
+            borderColor: theme.palette.error.main,
+          },
+        }),
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          marginTop: "4px",
+          color: `${theme.palette.error.main} !important`,
+          fontSize: "0.9rem",
         }),
       },
     },

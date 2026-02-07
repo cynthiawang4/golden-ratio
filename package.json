@@ -16,10 +16,12 @@
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",
+    "oslllo-svg-fixer": "^6.0.1",
     "prettier": "^3.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.13.0",
+    "vite-plugin-svgr": "^4.5.0",
     "zustand": "^4.4.0"
   },
   "devDependencies": {

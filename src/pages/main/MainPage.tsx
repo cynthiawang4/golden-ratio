@@ -17,7 +17,7 @@ export default function MainPage() {
     <div className={styles.mainContainer}>
       <Typography className={styles.title}>Golden Ratio</Typography>
       <div className={styles.buttonContainer}>
-        <Button variant="primary" onClick={handleHostButton}>
+        <Button variant="secondary" onClick={handleHostButton}>
           Host
         </Button>
         <Button variant="secondary" onClick={handleJoinButton}>

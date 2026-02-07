@@ -12,7 +12,7 @@
   & .title:global(.MuiTypography-root) {
     color: var(--primary-color);
     font-weight: 700;
-    font-size: 2rem;
+    font-size: 3rem;
     text-align: center;
     line-height: 1.5;
     letter-spacing: 0;
@@ -28,5 +28,8 @@
   gap: 1rem;
 
   & :global(.MuiButton-root) {
+    min-width: fit-content;
+    width: 175px;
+    height: 40px;
   }
 }
