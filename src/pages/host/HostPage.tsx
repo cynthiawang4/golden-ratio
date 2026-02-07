@@ -16,14 +16,14 @@ export default function HostPage() {
   const navigateToChoicePage = () => {
     // CYNTHIA TO DO DB HERE GENERATE ROOM CODE
     const roomId = "1234";
-    navigate(`/choice/${roomId}`);
+    navigate(`/choice/${roomId}`); //s: choice input page
   };
 
   return (
     <div className={styles.hostContainer}>
-      <div className={styles.topicContainer}>
+      <div className={styles.topicContainer}> 
         <Typography id={id} className={styles.topic}>
-          Topic
+          Topic 
         </Typography>
         <TextField
           placeholder="What to eat"

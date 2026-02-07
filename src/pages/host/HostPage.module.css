@@ -1,3 +1,6 @@
+@import url('https://fonts.google.com/specimen/Kulim+Park');
+@import url('https://fonts.google.com/specimen/Archivo+Black');
+
 .hostContainer {
   display: flex;
   flex-direction: column;
@@ -18,6 +21,7 @@
     line-height: 1.5;
     letter-spacing: 0;
     text-align: center;
+    font-family: 'Kulim park', sans-serif;
   }
 }
 
@@ -35,11 +39,9 @@
     font-size: 400;
     color: var(--primary-color);
     font-size: 2rem;
+    font-family: 'Archivo Black', sans-serif;
   }
-
-  & .topicTextField {
-    width: 80%;
-  }
+  
 }
 
 .buttonContainer {
@@ -80,6 +82,7 @@
       font-size: 2rem;
       font-weight: 400;
       line-height: 1;
+      font-family: 'Archivo black', sans-serif;
     }
 
     & svg {
