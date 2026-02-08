@@ -140,6 +140,7 @@
     font-weight: 500;
     font-size: 1.5rem;
     font-family: "Kulim Park";
+    text-align: center;
   }
 }
 
@@ -179,6 +180,7 @@
     font-family: "Madimi One";
     color: #fff;
     font-size: 1.75rem;
+    text-align: center;
   }
 
   & .revealButton {
@@ -192,5 +194,19 @@
     &:hover {
       background-color: var(--primary-color);
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .podiumContainer[data-rank="1"] .podiumStand {
+    width: 80px;
+  }
+
+  .podiumContainer[data-rank="2"] .podiumStand {
+    width: 70px;
+  }
+
+  .podiumContainer[data-rank="3"] .podiumStand {
+    width: 50px;
   }
 }
