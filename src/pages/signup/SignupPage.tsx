@@ -1,5 +1,5 @@
 import { signInWithGoogle } from '../../lib/supabaseClient'
-import styles from '../login/loginpage.module.css'
+import styles from '../login/LoginPage.module.css'
 
 export default function SignupPage() {
   return (
