@@ -142,6 +142,7 @@ export default function HostPage() {
               <MenuItem onClick={handleClose}>2</MenuItem>
               <MenuItem onClick={handleClose}>3</MenuItem>
               <MenuItem onClick={handleClose}>4</MenuItem>
+              <MenuItem onClick={handleClose}>5</MenuItem>
             </Menu>
           </div>
         </div>

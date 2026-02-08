@@ -44,8 +44,8 @@
   & .topic:global(.MuiTypography-root) {
     font-size: 400;
     color: var(--primary-color);
-    font-size: 2rem;
-    font-family: 'Archivo Black', sans-serif;
+    font-size: 2.5rem;
+    font-family: 'Madimi One', cursive;
   }
   
 }
@@ -68,6 +68,7 @@
   text-align: right;
   width: 100%;
   padding: 8px 16px !important; 
+  font-family: 'Kulim Park', sans-serif;
 }
 .numberOfChoices {
   font-size: 400;
