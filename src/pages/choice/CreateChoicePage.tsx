@@ -162,13 +162,15 @@ export default function CreateChoicePage({ roomId, poll, isHost, onDoneChoices, 
           </Button>
         </div>
 
-        <Button
-          onClick={onDoneChoices}
-          className={styles.choiceButton}
-          variant="primary"
-        >
-          Done
-        </Button>
+        {isHost && (
+          <Button
+            onClick={onDoneChoices}
+            className={styles.choiceButton}
+            variant="primary"
+          >
+            Done
+          </Button>
+        )}
       </div>
     </div>
   );

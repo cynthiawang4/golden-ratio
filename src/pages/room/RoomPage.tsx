@@ -7,9 +7,10 @@ import SharePage from "../share/SharePage";
 import CreateChoicePage from "../choice/CreateChoicePage";
 import ThanksChoicesPage from "../thanks-choices/ThanksChoices";
 import RankingPage from "../ranking/RankingPage";
-import RevealPage from "../reveal/RevealPage";
+import RevealPage from "../thanks-vote/ThanksVote";
 import ResultsPage from "../results/ResultsPage";
 import LoadingPage from "../../components/Loading";
+import ThanksVotePage from "../thanks-vote/ThanksVote";
 
 type PollStatus =
   | "setup"
@@ -78,12 +79,6 @@ export default function RoomPage() {
     }
   };
 
-  const handleReveal = () => {
-    // Once the host clicks the reveal button, update poll status to revealed
-    updatePollStatus("revealed");
-    setIsRevealing(true); // Change to revealing state
-  };
-
   if (loading) return <LoadingPage />;
   if (!poll) return <Typography>Poll not found</Typography>;
 
@@ -103,21 +98,21 @@ export default function RoomPage() {
           />
         );
       case "collecting":
-        return <CreateChoicePage roomId={roomId} poll={poll} isHost={isHost} onDoneChoices={() => updatePollStatus("collectingDone")}/>;
+        return <CreateChoicePage roomId={roomId} poll={poll} isHost={isHost} onDoneChoices={() => updatePollStatus("collectingDone")} />;
       case "collectingDone":
         return (
-          <SharePage
+          <ThanksChoicesPage
             roomId={roomId}
             mode={poll.mode}
             title={poll.title}
             isHost={isHost}
-            onStartChoices={() => updatePollStatus("ranking")}
+            onStartVote={() => updatePollStatus("ranking")}
           />
         );
       case "ranking":
         return <RankingPage roomId={roomId} num_choices={poll.num_choices} isHost={isHost} onDoneVote={() => updatePollStatus("rankingDone")} />;
       case "rankingDone":
-        return <RevealPage roomId={roomId} onReveal={handleReveal} />;
+        return <ThanksVotePage roomId={roomId} poll={poll} isHost={isHost} onReveal={() => updatePollStatus("revealed")} />;
       case "revealed":
         return <ResultsPage roomId={roomId} />;
       default:
@@ -125,30 +120,9 @@ export default function RoomPage() {
     }
   };
 
-  // ---------------- Host-only control buttons ----------------
-  const renderHostControls = () => {
-    if (!isHost) return null;
-
-    switch (poll.status as PollStatus) {
-      case "rankingDone":
-        return (
-          <Button
-            variant="contained"
-            onClick={() => updatePollStatus("revealed")}
-            style={{ marginTop: 20 }}
-          >
-            Reveal Results
-          </Button>
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
     <div className={styles.roomContainer}>
       {renderPage()}
-      {renderHostControls()}
     </div>
   );
 }

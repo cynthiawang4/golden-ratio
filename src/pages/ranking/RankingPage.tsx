@@ -130,16 +130,18 @@ export default function RankingPage({ roomId: propRoomId, num_choices, isHost, o
           })}
         </div>
       </div>
-      <ButtonColumn
-        onNext={handleNext}
-        disabled={userChoices.length !== num_choices}
-      />
+      {isHost && (
+        <ButtonColumn
+          onNext={onDoneVote}
+        />
+      )}
       <Button
-        onClick={onDoneVote}
+        onClick={handleNext}
         className={styles.choiceButton}
         variant="primary"
+        disabled={userChoices.length !== num_choices}
       >
-        Done
+        Upload
       </Button>
     </div>
   );
