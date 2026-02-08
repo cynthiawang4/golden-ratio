@@ -61,7 +61,7 @@ export default function SharePage({
 
       {isHost && mode === "everyone" && (
         <div className={styles.startButtonContainer}>
-          <Button variant="contained" onClick={onStartChoices}>
+          <Button variant="primary" onClick={onStartChoices}>
             Start Adding Choices
           </Button>
         </div>
@@ -69,7 +69,7 @@ export default function SharePage({
 
       {isHost && mode === "onlyMe" && (
         <div className={styles.startButtonContainer}>
-          <Button variant="contained" onClick={onStartChoices}>
+          <Button variant="primary" onClick={onStartChoices}>
             Start Ranking
           </Button>
         </div>

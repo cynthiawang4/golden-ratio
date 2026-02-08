@@ -137,17 +137,17 @@ export default function RankingPage({
               />
             );
           })}
+          <Button
+            onClick={handleNext}
+            className={styles.choiceButton}
+            variant="primary"
+            disabled={userChoices.length !== num_choices}
+          >
+            Upload
+          </Button>
         </div>
       </div>
       {isHost && <ButtonColumn onNext={onDoneVote} />}
-      <Button
-        onClick={handleNext}
-        className={styles.choiceButton}
-        variant="primary"
-        disabled={userChoices.length !== num_choices}
-      >
-        Upload
-      </Button>
     </div>
   );
 }

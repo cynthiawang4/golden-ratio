@@ -82,12 +82,6 @@ export default function CreateChoicePage({
         const { error } = await supabase.from("choices").insert(payload);
         if (error) throw error;
       }
-
-      // Move to collectingDone
-      await supabase
-        .from("polls")
-        .update({ status: "collectingDone" })
-        .eq("id", roomId);
     } catch (e) {
       console.error("Failed to save choices", e);
     }
@@ -120,23 +114,20 @@ export default function CreateChoicePage({
               setInput(e.target.value);
             }}
             className={styles.choiceTextField}
-            helperText={`${input.length} / ${MAX_CHOICE_LENGTH}`}
             disabled={isCollectingDone || (!isHost && poll?.mode === "onlyMe")}
           />
-          <div className={styles.suggestButtonWrapper}>
-            <Button
-              onClick={handleAddChoice}
-              disabled={
-                input.length === 0 ||
-                isCollectingDone ||
-                (!isHost && poll?.mode === "onlyMe")
-              }
-              className={styles.choiceButton}
-              variant="primary"
-            >
-              Suggest
-            </Button>
-          </div>
+          <Button
+            onClick={handleAddChoice}
+            disabled={
+              input.length === 0 ||
+              isCollectingDone ||
+              (!isHost && poll?.mode === "onlyMe")
+            }
+            className={styles.choiceButton}
+            variant="primary"
+          >
+            Suggest
+          </Button>
         </div>
         <div className={styles.choiceListWrapper}>
           <Typography className={styles.label}>Your Choices</Typography>
@@ -168,17 +159,16 @@ export default function CreateChoicePage({
             Upload
           </Button>
         </div>
-
-        {isHost && (
-          <Button
-            onClick={onDoneChoices}
-            className={styles.choiceButton}
-            variant="primary"
-          >
-            Done
-          </Button>
-        )}
       </div>
+      {isHost && (
+        <Button
+          onClick={onDoneChoices}
+          className={styles.doneButton}
+          variant="primary"
+        >
+          Done
+        </Button>
+      )}
     </div>
   );
 }

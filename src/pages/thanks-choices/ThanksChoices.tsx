@@ -51,7 +51,7 @@ export default function ThanksChoicesPage({
 
         {isHost ? (
           <div className={styles.startButtonContainer}>
-            <Button variant="contained" onClick={onStartVote}>
+            <Button variant="primary" onClick={onStartVote}>
               Start Ranking
             </Button>
           </div>

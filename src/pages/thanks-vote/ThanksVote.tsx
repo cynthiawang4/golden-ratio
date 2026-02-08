@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Typography, IconButton } from "@mui/material";
-import styles from "../results/ResultsPage.module.css";
-import thanksStyles from "./ThanksVote.module.css";
+import styles from "./ThanksVote.module.css";
 
 import Spiral from "../../images/spiral.svg?react";
 import ArrowRight from "../../images/arrow-right.svg?react";
@@ -42,26 +41,20 @@ export default function ThanksVotePage({
      =========================== */
   if (isHost) {
     return (
-      <div className={styles.revealContainer}>
-        <Typography className={styles.subtitle}>The votes are in...</Typography>
+      <div className={styles.revealPage}>
+        <div className={styles.revealContainer}>
+          <Typography className={styles.subtitle}>The votes are in...</Typography>
 
-        <div className={styles.revealWrapper}>
-          <Spiral className={styles.spiral} />
-          <div className={styles.revealButtonWrapper}>
-            <Typography className={styles.title}>REVEAL RESULTS</Typography>
-            <IconButton className={styles.revealButton} onClick={handleReveal}>
-              <ArrowRight />
-            </IconButton>
+          <div className={styles.revealWrapper}>
+            <Spiral className={styles.spiral} />
+            <div className={styles.revealButtonWrapper}>
+              <Typography className={styles.title}>REVEAL RESULTS</Typography>
+              <IconButton className={styles.revealButton} onClick={handleReveal}>
+                <ArrowRight />
+              </IconButton>
+            </div>
           </div>
         </div>
-
-        <Button
-          variant="primary"
-          onClick={handleExit}
-          style={{ marginTop: 20 }}
-        >
-          Exit
-        </Button>
       </div>
     );
   }
@@ -70,21 +63,21 @@ export default function ThanksVotePage({
      GUEST VIEW — THANK YOU
      =========================== */
   return (
-    <div className={thanksStyles.thanksVoteContainer}>
-      <div className={thanksStyles.titleWrapper}>
-        <IconButton onClick={handleExit} className={thanksStyles.backButton}>
+    <div className={styles.thanksVoteContainer}>
+      <div className={styles.titleWrapper}>
+        <IconButton onClick={handleExit} className={styles.backButton}>
           <Back />
         </IconButton>
       </div>
 
-      <CheckIcon className={thanksStyles.check} />
+      <CheckIcon className={styles.check} />
 
-      <div className={thanksStyles.contentContainer}>
+      <div className={styles.contentContainer}>
         <Typography variant="h6">Thanks for voting!</Typography>
 
-        <div className={thanksStyles.topic}>Topic: {topic || "—"}</div>
+        <div className={styles.topic}>Topic: {topic || "—"}</div>
 
-        <div className={thanksStyles.waitMessage}>
+        <div className={styles.waitMessage}>
           Please wait while we tally the results...
           <br />
           Come back after host confirmation!

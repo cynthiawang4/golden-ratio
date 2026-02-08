@@ -118,7 +118,7 @@ const themeOptions: ThemeOptions = {
             color: theme.palette.text.primary,
           },
           "&:hover": {
-            backgroundColor: theme.palette.action.hover,
+            backgroundColor: "#253164",
           },
           // Error state
           "&.Mui-error": {
