@@ -11,23 +11,22 @@ const MAX_TOPIC_LENGTH = 127;
 export default function HostPage() {
   const navigate = useNavigate();
   const [textInput, setTextInput] = useState<string>("");
-  const [selectedMode, setSelectedMode] = useState<"everyone" | "onlyMe" | null>(null);
+  const [selectedMode, setSelectedMode] = useState<
+    "everyone" | "onlyMe" | null
+  >(null);
   const id = useId();
 
   //dropdown?
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget); // Sets the button as the anchor
   };
 
-
   const handleClose = () => {
     setAnchorEl(null);
   };
-
 
   // restore topic after OAuth redirect if present
   useEffect(() => {
@@ -46,7 +45,7 @@ export default function HostPage() {
   const handleNext = async () => {
     // require mode selection first
     if (!selectedMode) return;
-    
+
     // require host to be signed in before creating poll
     try {
       const { data: userData } = await auth.getUser();
@@ -68,7 +67,13 @@ export default function HostPage() {
         .single();
       if (error) throw error;
       const pollId = (data as any).id as string;
-      navigate(`/confirmation`, { state: { topic: textInput || "Untitled", roomId: pollId, mode: selectedMode } });
+      navigate(`/confirmation`, {
+        state: {
+          topic: textInput || "Untitled",
+          roomId: pollId,
+          mode: selectedMode,
+        },
+      });
     } catch (e) {
       console.error("Failed to create poll", e);
     }
@@ -111,42 +116,41 @@ export default function HostPage() {
         </Button>
       </div>
       <div className={styles.dropdownContainer}>
-          <div className={styles.numberOfChoices}>
-            <p>
-              Number of choices:
-            </p>
-          </div>
-          <div>
-            <Button variant="contained" onClick={handleClick}>
-              None
-            </Button>
-            <Menu className={styles.dropdownItems}
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              slotProps={{
-                paper: {
-                  className: styles.dropdownMenu
-                }
-              }}
-            >
-              <MenuItem onClick={handleClose}>1</MenuItem>
-              <MenuItem onClick={handleClose}>2</MenuItem>
-              <MenuItem onClick={handleClose}>3</MenuItem>
-              <MenuItem onClick={handleClose}>4</MenuItem>
-            </Menu>
-          </div>
+        <div className={styles.numberOfChoices}>
+          <p>Number of choices:</p>
         </div>
+        <div>
+          <Button variant="contained" onClick={handleClick}>
+            None
+          </Button>
+          <Menu
+            className={styles.dropdownItems}
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            slotProps={{
+              paper: {
+                className: styles.dropdownMenu,
+              },
+            }}
+          >
+            <MenuItem onClick={handleClose}>1</MenuItem>
+            <MenuItem onClick={handleClose}>2</MenuItem>
+            <MenuItem onClick={handleClose}>3</MenuItem>
+            <MenuItem onClick={handleClose}>4</MenuItem>
+          </Menu>
+        </div>
+      </div>
       <div className={styles.nextContainer}>
-        <Button onClick={handleNext} variant="contained" disabled={!selectedMode}>
+        <Button onClick={handleNext} variant="primary" disabled={!selectedMode}>
           Next
         </Button>
       </div>

@@ -8,3 +8,8 @@ declare module "*.svg?react" {
   const SVG: React.VFC<React.SVGProps<SVGSVGElement>>;
   export default SVG;
 }
+
+declare module "*.mp3" {
+  const src: string;
+  export default src;
+}
