@@ -3,28 +3,43 @@ import { useNavigate, useParams } from "react-router-dom";
 import styles from "./RoomPage.module.css";
 import { CircularProgress, Typography } from "@mui/material";
 import LoadingPage from "../../components/Loading";
+import { supabase } from "../../lib/supabaseClient";
 
-type RoomState = "choice" | "rank";
-
-// TODO: Implement redirection based on "everyone" or "only me" choice
 export default function RoomPage() {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    try {
-      if (!roomId) return;
-      const roomState: RoomState = "choice";
+    if (!roomId) return;
 
-      if (roomState === "choice") {
-        navigate(`/choice/${roomId}`);
+    (async () => {
+      const { data: poll } = await supabase
+        .from("polls")
+        .select("mode, status")
+        .eq("id", roomId)
+        .single();
+
+      if (!poll) return;
+
+      if (poll.status === 'setup') {
+        poll.mode === 'everyone'
+          ? navigate(`/share/${roomId}`)
+          : navigate(`/choice/${roomId}`)
       }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
+
+      if (poll.status === 'collecting') {
+        navigate(`/choice/${roomId}`)
+      }
+
+      if (poll.status === 'ranking') {
+        navigate(`/ranking/${roomId}`)
+      }
+
+      if (poll.status === 'revealed') {
+        navigate(`/results/${roomId}`)
+      }
+    })();
   }, [roomId]);
 
   if (loading) return <LoadingPage />;

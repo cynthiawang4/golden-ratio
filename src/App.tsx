@@ -21,10 +21,10 @@ export default function App() {
         <Route path="/room/:roomId" element={<RoomPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/confirmation" element={<SharePage />} />
-        <Route path="/results/:roomId" element={<ResultsPage />} />
+        <Route path="/share/:roomId" element={<SharePage />} />
         <Route path="/choice/:roomId" element={<CreateChoicePage />} />
         <Route path="/ranking/:roomId" element={<RankingPage />} />
+        <Route path="/results/:roomId" element={<ResultsPage />} />
       </Routes>
     </ThemeWrapper>
   );
