@@ -136,6 +136,52 @@ const themeOptions: ThemeOptions = {
         }),
       },
     },
+    MuiToggleButton: {
+      defaultProps: {
+        disableFocusRipple: true,
+        disableTouchRipple: true,
+      },
+      styleOverrides: {
+        root: ({ theme }) => ({
+          borderRadius: "8px",
+          color: "#A9A9A9",
+          fontFamily: "Kulim Park",
+          backgroundColor: "#fff",
+          fontWeight: 600,
+          fontSize: "1rem",
+          height: "40px",
+          "&:hover": {
+            backgroundColor: theme.palette.primary.light,
+            border: "none",
+            color: theme.palette.primary.contrastText,
+          },
+
+          transition: "all 0.2s ease-in-out",
+          "&.Mui-selected": {
+            color: "#fff",
+            background: "#F8AA69",
+          },
+
+          "&:focus-visible": {
+            outline: `4px solid ${theme.palette.primary.main}`,
+            outlineOffset: "5px",
+          },
+        }),
+      },
+    },
+    MuiToggleButtonGroup: {
+      styleOverrides: {
+        root: {
+          gap: "2rem", // Adjust the spacing here
+          padding: "4px",
+          border: "none", // Removes the group border
+          "& .MuiToggleButtonGroup-grouped": {
+            border: "none", // Removes the line between buttons
+            borderRadius: "8px !important", // Forces all buttons to have rounded corners
+          },
+        },
+      },
+    },
   },
 };
 

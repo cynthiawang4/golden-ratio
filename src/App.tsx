@@ -11,6 +11,7 @@ import RoomPage from "./pages/room/RoomPage";
 import RankingPage from "./pages/ranking/Ranking";
 import ResultsPage from "./pages/results/ResultsPage";
 import ThanksVotePage from "./pages/thanks-vote/ThanksVote";
+import DashboardPage from "./pages/dashboard/DashboardPage";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
       <Routes>
         <Route path="" element={<MainPage />} />
         <Route path="/host" element={<HostPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/room/:roomId" element={<RoomPage />} />
         <Route path="/signup" element={<SignupPage />} />
