@@ -1,4 +1,4 @@
-import { Menu, MenuItem, Button, TextField, Typography } from "@mui/material";
+import { FormControl, InputLabel, Select, Menu, MenuItem, Button, TextField, Typography } from "@mui/material";
 import styles from "./HostPage.module.css";
 import { useId, useEffect, useState } from "react";
 import EveryoneIcon from "../../images/everyone.svg?react";
@@ -11,22 +11,17 @@ const MAX_TOPIC_LENGTH = 127;
 export default function HostPage() {
   const navigate = useNavigate();
   const [textInput, setTextInput] = useState<string>("");
-  const [selectedMode, setSelectedMode] = useState<
-    "everyone" | "onlyMe" | null
-  >(null);
+  const [selectedMode, setSelectedMode] = useState<"everyone" | "onlyMe" | null>(null);
   const id = useId();
 
   //dropdown?
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const [choice, setChoice] = useState('');
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget); // Sets the button as the anchor
+  // 2. Create the handler to update the state
+  const handleChange = (event) => {
+    setChoice(event.target.value);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   // restore topic after OAuth redirect if present
   useEffect(() => {
@@ -45,7 +40,7 @@ export default function HostPage() {
   const handleNext = async () => {
     // require mode selection first
     if (!selectedMode) return;
-
+    
     // require host to be signed in before creating poll
     try {
       const { data: userData } = await auth.getUser();
@@ -67,13 +62,7 @@ export default function HostPage() {
         .single();
       if (error) throw error;
       const pollId = (data as any).id as string;
-      navigate(`/confirmation`, {
-        state: {
-          topic: textInput || "Untitled",
-          roomId: pollId,
-          mode: selectedMode,
-        },
-      });
+      navigate(`/confirmation`, { state: { topic: textInput || "Untitled", roomId: pollId, mode: selectedMode } });
     } catch (e) {
       console.error("Failed to create poll", e);
     }
@@ -122,37 +111,26 @@ export default function HostPage() {
             </p>
           </div>
           <div>
-            <Button variant="contained" onClick={handleClick}>
-              None
-            </Button>
-            <Menu className={styles.dropdownItems}
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              slotProps={{
-                paper: {
-                  className: styles.dropdownMenu
-                }
-              }}
-            >
-              <MenuItem onClick={handleClose}>1</MenuItem>
-              <MenuItem onClick={handleClose}>2</MenuItem>
-              <MenuItem onClick={handleClose}>3</MenuItem>
-              <MenuItem onClick={handleClose}>4</MenuItem>
-              <MenuItem onClick={handleClose}>5</MenuItem>
-            </Menu>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Choice</InputLabel>
+              <Select
+                labelId="simple-select-label"
+                id="simple-select"
+                label="Choice"
+                value={choice}
+                onChange={handleChange}
+              >
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+              </Select>
+            </FormControl>
           </div>
         </div>
       <div className={styles.nextContainer}>
-        <Button onClick={handleNext} variant="primary" disabled={!selectedMode}>
+        <Button onClick={handleNext} variant="contained" disabled={!selectedMode}>
           Next
         </Button>
       </div>
