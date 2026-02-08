@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./RoomPage.module.css";
-import { CircularProgress, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import LoadingPage from "../../components/Loading";
 import { supabase } from "../../lib/supabaseClient";
 
