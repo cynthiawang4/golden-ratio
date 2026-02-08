@@ -1,6 +1,6 @@
 import { FormControl, InputLabel, Select, Menu, MenuItem, Button, TextField, Typography } from "@mui/material";
 import styles from "./HostPage.module.css";
-import { useId, useEffect, useState } from "react";
+import { useId, useState } from "react";
 import EveryoneIcon from "../../images/everyone.svg?react";
 import ForMeIcon from "../../images/for-me.svg?react";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,7 @@ const MAX_TOPIC_LENGTH = 127;
 export default function HostPage() {
   const navigate = useNavigate();
   const [textInput, setTextInput] = useState<string>("");
-  const [selectedMode, setSelectedMode] = useState<"everyone" | "onlyMe" | null>(null);
+  const [mode, setMode] = useState<"everyone" | "onlyMe" | null>(null);
   const id = useId();
 
   //dropdown?
@@ -22,50 +22,37 @@ export default function HostPage() {
     setChoice(event.target.value);
   };
 
-
-  // restore topic after OAuth redirect if present
-  useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem("preAuth");
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed?.returnTo === "/host" && parsed.topic) {
-          setTextInput(parsed.topic);
-        }
-        sessionStorage.removeItem("preAuth");
-      }
-    } catch (e) {}
-  }, []);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleNext = async () => {
-    // require mode selection first
-    if (!selectedMode) return;
+    // Require mode selection first
+    if (!mode) return;
     
-    // require host to be signed in before creating poll
-    try {
-      const { data: userData } = await auth.getUser();
-      const user = (userData as any)?.user ?? null;
-      if (!user) {
-        // preserve entered topic and redirect to login
-        navigate("/login", { state: { returnTo: "/host", topic: textInput } });
-        return;
-      }
-
-      const insert = {
-        owner_id: user.id,
-        title: textInput || "Untitled",
-      };
-      const { data, error } = await supabase
-        .from("polls")
-        .insert(insert)
-        .select("id")
-        .single();
-      if (error) throw error;
-      const pollId = (data as any).id as string;
-      navigate(`/confirmation`, { state: { topic: textInput || "Untitled", roomId: pollId, mode: selectedMode } });
-    } catch (e) {
-      console.error("Failed to create poll", e);
+    // Require host to be signed in before creating poll
+    const { data: userData } = await auth.getUser();
+    const user = (userData as any)?.user ?? null;
+    if (!user) {
+      // Preserve entered topic and redirect to login
+      navigate("/login", { state: { returnTo: "/host", topic: textInput } });
+      return;
     }
+
+    const { data, error } = await supabase
+    .from('polls')
+    .insert({
+      title: textInput || 'Untitled',
+      owner_id: user.id,
+      mode,
+      status: 'setup',
+    })
+    .select('id')
+    .single()
+
+    if (error) return console.error(error)
+
+    navigate(`/room/${data.id}`)
   };
 
   return (
@@ -90,15 +77,15 @@ export default function HostPage() {
       </Typography>
       <div className={styles.buttonContainer}>
         <Button
-          onClick={() => setSelectedMode("everyone")}
-          className={selectedMode === "everyone" ? styles.selected : ""}
+          onClick={() => setMode("everyone")}
+          className={mode === "everyone" ? styles.selected : ""}
         >
           <Typography>Everyone</Typography>
           <EveryoneIcon className={styles.everyoneIcon} />
         </Button>
         <Button
-          onClick={() => setSelectedMode("onlyMe")}
-          className={selectedMode === "onlyMe" ? styles.selected : ""}
+          onClick={() => setMode("onlyMe")}
+          className={mode === "onlyMe" ? styles.selected : ""}
         >
           <Typography>Only Me!</Typography>
           <ForMeIcon className={styles.forMeIcon} />
@@ -130,7 +117,7 @@ export default function HostPage() {
           </div>
         </div>
       <div className={styles.nextContainer}>
-        <Button onClick={handleNext} variant="contained" disabled={!selectedMode}>
+        <Button onClick={handleNext} variant="primary" disabled={!mode}>
           Next
         </Button>
       </div>

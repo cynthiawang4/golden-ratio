@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button, Stack, Typography } from "@mui/material";
 import StarIcon from "../../images/star.svg?react";
 import LoadingPage from "../../components/Loading";
+import { supabase } from "../../lib/supabaseClient";
 
 export default function RankingPage() {
   const { roomId } = useParams();
@@ -15,14 +16,15 @@ export default function RankingPage() {
     choices.length,
   );
 
-  // CYNTHIA GET CHOICES FROM DB DO YOU FILTER
   useEffect(() => {
     if (!roomId) return;
     try {
       setLoading(true);
-      const choices = ["Applies", "Banana", "Carrot", "Donut", "Elephant"];
-      setChoices(choices);
-      setTopic("What to eat?");
+      
+      supabase.from('choices')
+        .select('*')
+        .eq('poll_id', roomId)
+        .then(({ data }) => setChoices(data || []))
 
       let choicesToChoose = 2;
       // Validate choices
@@ -30,6 +32,7 @@ export default function RankingPage() {
         choicesToChoose = choices.length;
       }
       setNumChoicesToChoose(choicesToChoose);
+      console.log(numChoicesToChoose);
     } catch (e) {
       console.error(e);
     } finally {
@@ -37,8 +40,26 @@ export default function RankingPage() {
     }
   }, [roomId]);
 
-  // CYNTHIA DB TO DO SUBMIT RANKINGS
-  const handleNext = () => {};
+  // Submit rankings to database
+  const handleNext = async () => {
+    const { data: user } = await supabase.auth.getUser();
+    const userId = user?.user?.id;
+    if (!userId) return;
+
+    const inserts = userChoices.map((choiceLabel, index) => {
+      const choice = choices.find(c => c.label === choiceLabel);
+      if (!choice) return null;
+      return {
+        poll_id: roomId,
+        choice_id: choice.id,
+        user_id: userId,
+        rank: index + 1, // 1 = top rank, 2 = second, etc.
+      };
+    }).filter(Boolean);
+
+    const { error } = await supabase.from('votes').insert(inserts);
+    if (error) console.error(error);
+  };
 
   const handleChoiceButton = (choiceText: string) => {
     setUserChoices((prev) => {
@@ -56,6 +77,7 @@ export default function RankingPage() {
       // .slice(0, -1) gets everything except the last element
       return [...prev.slice(0, -1), choiceText];
     });
+    console.log(userChoices);
   };
 
   if (loading) return <LoadingPage />;
@@ -72,13 +94,14 @@ export default function RankingPage() {
         </Stack>
         <div className={styles.choiceContainer}>
           {choices.map((choice, i) => {
-            const userChoiceIndex = userChoices.findIndex((c) => choice === c);
+            const choiceText = choice.label;
+            const userChoiceIndex = userChoices.findIndex((c) => c === choiceText);
             return (
               <ChoiceButton
-                key={i}
-                onClick={() => handleChoiceButton(choice)}
+                key={choice.id}
+                onClick={() => handleChoiceButton(choiceText)}
                 rank={userChoiceIndex !== -1 ? userChoiceIndex + 1 : undefined}
-                text={choice}
+                text={choiceText}
               />
             );
           })}
