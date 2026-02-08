@@ -16,10 +16,6 @@
   gap: 1rem;
 }
 
-.backButton {
-  color: #fff !important;
-}
-
 .title:global(.MuiTypography-root) {
   color: var(--title-text);
   font-weight: 600;
@@ -72,11 +68,20 @@
   width: 150px;
   height: 535px;
   padding: 0.5rem;
+  box-sizing: border-box;
 
   & :global(.MuiButton-root) {
     width: 20%;
     height: 10%;
   }
+}
+
+.suggestButtonWrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .choiceListContainer {
@@ -125,13 +130,6 @@
   }
 }
 
-@media (max-width: 768px) {
-  .choiceSection {
-    overflow: auto;
-    flex-direction: column;
-  }
-}
-
 .choiceButton:global(.MuiButton-root) {
   height: 45px;
   box-shadow: 0px 5px 0px 0px #f5d8c0;
@@ -144,4 +142,28 @@
   box-shadow: 0px 5px 0px 0px #f5d8c0;
   border: 4px solid #f5d8c0;
   background-color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+  .choiceContainer {
+    overflow-y: auto;
+  }
+  .titleWrapper {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .choiceSection {
+    overflow: auto;
+    flex-direction: column;
+  }
+
+  .choiceButton:global(.MuiButton-root) {
+    width: 100%;
+  }
+
+  .choiceListWrapper {
+    width: 100%;
+    flex: unset;
+    overflow-y: auto;
+  }
 }

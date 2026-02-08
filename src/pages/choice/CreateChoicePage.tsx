@@ -12,6 +12,7 @@ import Trash from "../../images/trash.svg?react";
 import Back from "../../images/back.svg?react";
 import LoadingPage from "../../components/Loading";
 import { supabase, auth } from "../../lib/supabaseClient";
+import BackButton from "../../components/BackButton";
 
 const MAX_CHOICE_LENGTH = 127;
 
@@ -23,7 +24,7 @@ export default function CreateChoicePage() {
   const [input, setInput] = useState<string>("");
   const [choices, setChoices] = useState<any[]>([]);
   const [savedLabels, setSavedLabels] = useState<Set<string>>(new Set());
-  const [poll, setPoll] = useState<any>(null)
+  const [poll, setPoll] = useState<any>(null);
 
   useEffect(() => {
     if (!roomId) return;
@@ -32,11 +33,11 @@ export default function CreateChoicePage() {
       // load poll from Supabase
       (async () => {
         const { data } = await supabase
-          .from('polls')
-          .select('*')
-          .eq('id', roomId)
-          .single()
-        setPoll(data)
+          .from("polls")
+          .select("*")
+          .eq("id", roomId)
+          .single();
+        setPoll(data);
 
         const { data: choiceList } = await supabase
           .from("choices")
@@ -92,14 +93,14 @@ export default function CreateChoicePage() {
         .insert(payload)
         .select("id,label");
 
-      if (poll.mode === 'everyone') {
+      if (poll.mode === "everyone") {
         await supabase
-          .from('polls')
-          .update({ status: 'ranking' })
-          .eq('id', roomId)
-        navigate(`/ranking/${roomId}`)
+          .from("polls")
+          .update({ status: "ranking" })
+          .eq("id", roomId);
+        navigate(`/ranking/${roomId}`);
       } else {
-        navigate(`/share/${roomId}`)
+        navigate(`/share/${roomId}`);
       }
 
       if (error) throw error;
@@ -120,9 +121,7 @@ export default function CreateChoicePage() {
   return (
     <div className={styles.choiceContainer}>
       <div className={styles.titleWrapper}>
-        <IconButton onClick={handleOnBack} className={styles.backButton}>
-          <Back />
-        </IconButton>
+        <BackButton onClick={handleOnBack} />
         <Typography className={styles.title}>Topic: {topic}</Typography>
       </div>
       <div className={styles.choiceSection}>
@@ -137,7 +136,7 @@ export default function CreateChoicePage() {
             className={styles.choiceTextField}
             helperText={`${input.length} / ${MAX_CHOICE_LENGTH}`}
           />
-          <Stack direction={"row"} justifyContent={"flex-end"} width={"100%"}>
+          <div className={styles.suggestButtonWrapper}>
             <Button
               onClick={handleAddChoice}
               disabled={input.length === 0}
@@ -146,7 +145,7 @@ export default function CreateChoicePage() {
             >
               Suggest
             </Button>
-          </Stack>
+          </div>
         </div>
         <div className={styles.choiceListWrapper}>
           <Typography className={styles.label}>Your Choices</Typography>

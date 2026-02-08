@@ -1,10 +1,18 @@
-import { FormControl, InputLabel, Select, Menu, MenuItem, Button, TextField, Typography } from "@mui/material";
+import {
+  Select,
+  MenuItem,
+  Button,
+  TextField,
+  Typography,
+  Stack,
+} from "@mui/material";
 import styles from "./HostPage.module.css";
 import { useId, useState } from "react";
 import EveryoneIcon from "../../images/everyone.svg?react";
 import ForMeIcon from "../../images/for-me.svg?react";
 import { useNavigate } from "react-router-dom";
 import { supabase, auth } from "../../lib/supabaseClient";
+import BackButton from "../../components/BackButton";
 
 const MAX_TOPIC_LENGTH = 127;
 
@@ -13,23 +21,12 @@ export default function HostPage() {
   const [textInput, setTextInput] = useState<string>("");
   const [mode, setMode] = useState<"everyone" | "onlyMe" | null>(null);
   const id = useId();
-
-  //dropdown?
-  const [choice, setChoice] = useState('');
-
-  // 2. Create the handler to update the state
-  const handleChange = (event) => {
-    setChoice(event.target.value);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const [choice, setChoice] = useState<number>(3);
 
   const handleNext = async () => {
     // Require mode selection first
     if (!mode) return;
-    
+
     // Require host to be signed in before creating poll
     const { data: userData } = await auth.getUser();
     const user = (userData as any)?.user ?? null;
@@ -40,23 +37,26 @@ export default function HostPage() {
     }
 
     const { data, error } = await supabase
-    .from('polls')
-    .insert({
-      title: textInput || 'Untitled',
-      owner_id: user.id,
-      mode,
-      status: 'setup',
-    })
-    .select('id')
-    .single()
+      .from("polls")
+      .insert({
+        title: textInput || "Untitled",
+        owner_id: user.id,
+        mode,
+        status: "setup",
+      })
+      .select("id")
+      .single();
 
-    if (error) return console.error(error)
+    if (error) return console.error(error);
 
-    navigate(`/room/${data.id}`)
+    navigate(`/room/${data.id}`);
   };
 
   return (
     <div className={styles.hostContainer}>
+      <Stack direction={"row"} width={"100%"}>
+        <BackButton onClick={() => navigate("/")} />
+      </Stack>
       <div className={styles.topicContainer}>
         <Typography id={id} className={styles.topic}>
           Topic
@@ -76,48 +76,45 @@ export default function HostPage() {
         Who is providing the choices?
       </Typography>
       <div className={styles.buttonContainer}>
-        <Button className={styles.hostButton} variant="primary"
+        <Button
+          className={`${styles.hostButton} ${mode === "everyone" ? styles.selected : ""}`}
+          variant="primary"
           onClick={() => setMode("everyone")}
-          className={mode === "everyone" ? styles.selected : ""}
         >
           <Typography>Everyone</Typography>
           <EveryoneIcon className={styles.everyoneIcon} />
         </Button>
-        <Button className={styles.hostButton} variant="primary"
+        <Button
+          className={`${styles.hostButton} ${mode === "onlyMe" ? styles.selected : ""}`}
+          variant="primary"
           onClick={() => setMode("onlyMe")}
-          className={mode === "onlyMe" ? styles.selected : ""}
         >
           <Typography>Only Me!</Typography>
           <ForMeIcon className={styles.forMeIcon} />
         </Button>
       </div>
-      <div className={styles.dropdownContainer}>
-          <div className={styles.numberOfChoices}>
-            <p>
-              Number of choices:
-            </p>
-          </div>
-          <div>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Choice</InputLabel>
-              <Select
-                labelId="simple-select-label"
-                id="simple-select"
-                label="Choice"
-                value={choice}
-                onChange={handleChange}
-              >
-                <MenuItem value={1}>1</MenuItem>
-                <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={4}>4</MenuItem>
-                <MenuItem value={5}>5</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
+      <div className={styles.footer}>
+        <div className={styles.dropdownContainer}>
+          <Typography className={styles.numberOfChoices}>
+            Number of choices:
+          </Typography>
+          <Select
+            renderValue={(value) => (
+              <span className={styles.dropdownLabel}>{value}</span>
+            )}
+            label="Choice"
+            value={choice}
+            onChange={(e) => setChoice(e.target.value)}
+            className={styles.dropdown}
+          >
+            <MenuItem value={1}>1</MenuItem>
+            <MenuItem value={2}>2</MenuItem>
+            <MenuItem value={3}>3</MenuItem>
+            <MenuItem value={4}>4</MenuItem>
+            <MenuItem value={5}>5</MenuItem>
+          </Select>
         </div>
-      <div className={styles.nextContainer}>
-        <Button onClick={handleNext} variant="primary"disabled={!mode}>
+        <Button onClick={handleNext} variant="primary" disabled={!mode}>
           Next
         </Button>
       </div>

@@ -145,15 +145,12 @@ type ButtonColumnProps = {
 function ButtonColumn({ onNext, disabled }: ButtonColumnProps) {
   return (
     <div className={styles.buttonContainer}>
-      <StarIcon style={{ opacity: onNext ? "1" : "0" }} />
+      <StarIcon className={`${onNext === undefined ? styles.hide : ""}`} />
       <Button
         variant="primary"
         onClick={onNext}
         disabled={disabled}
-        style={{
-          opacity: onNext ? "1" : "0",
-          pointerEvents: onNext ? "auto" : "none",
-        }}
+        className={`${onNext === undefined ? styles.hide : ""}`}
         aria-hidden={Boolean(onNext)}
       >
         Next

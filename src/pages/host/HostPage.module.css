@@ -1,5 +1,5 @@
-@import url('https://fonts.google.com/specimen/Kulim+Park');
-@import url('https://fonts.google.com/specimen/Archivo+Black');
+@import url("https://fonts.google.com/specimen/Kulim+Park");
+@import url("https://fonts.google.com/specimen/Archivo+Black");
 
 .hostContainer {
   display: flex;
@@ -8,12 +8,10 @@
   justify-content: center;
   box-sizing: border-box;
   padding: 1rem;
-  width: 100vw;
-  height: 100vh;
-  gap: 1rem;
+  width: 100%;
+  height: 100%;
   background-color: var(--background);
   overflow-y: auto;
-  
 
   & .title:global(.MuiTypography-root) {
     font-weight: 600;
@@ -22,15 +20,26 @@
     line-height: 1.5;
     letter-spacing: 0;
     text-align: center;
-    
-    font-family: 'Kulim park', sans-serif;
+
+    font-family: "Kulim park", sans-serif;
   }
 }
 
 .nextContainer {
   display: flex;
-  justify-content: center;
-  margin-top: -1.5rem;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 0 0.5rem;
+  margin-top: 2.5rem;
 }
 
 .topicContainer {
@@ -41,43 +50,47 @@
   width: 100%;
   gap: 1rem;
   padding: 1rem;
+  padding-top: 0;
+  margin-top: -1rem;
   box-sizing: border-box;
 
   & .topic:global(.MuiTypography-root) {
     font-size: 400;
-    color: var(--primary-color);
+    color: var(--title-text);
     font-size: 2.5rem;
-    font-family: 'Madimi One', cursive;
+    font-family: "Madimi One", cursive;
   }
-  
 }
 .dropdownContainer {
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 2rem;
-  width: 100%;
-  padding: 0 2rem;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
   box-sizing: border-box;
 }
-.dropdownMenu {
-  min-width: 100px !important;
+
+.dropdown {
+  border-radius: 16px !important;
+  width: 100px;
+  height: 45px;
 }
-.dropdownItems {
-  display: flex !important;
-  justify-content: flex-end !important; 
-  text-align: right;
-  width: 100%;
-  padding: 8px 16px !important; 
-  font-family: 'Kulim Park', sans-serif;
+
+.dropdownLabel {
+  color: #fff;
+  flex: 1;
 }
-.numberOfChoices {
+
+.numberOfChoices:global(.MuiTypography-root) {
   font-size: 400;
   color: var(--primary-color);
-  font-size: 2rem;
-  font-weight: 900;
-  font-family: 'Kulim park', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: "Kulim park", sans-serif;
+}
+
+.topicTextField {
+  width: 70%;
 }
 
 .buttonContainer {
@@ -101,7 +114,6 @@
     flex-direction: column;
     padding: 2rem;
     gap: 1rem;
- 
 
     transition: all 0.2s;
 
@@ -143,11 +155,50 @@
 }
 @media (max-width: 768px) {
   .hostContainer {
-      & .buttonContainer {
-       & :global(.MuiButton-root) {
-        flex: 1;
-        aspect-ratio: 1;
+    overflow-y: auto;
+    align-items: flex-start;
+    height: 100%;
+    & .buttonContainer {
+      flex-direction: column;
+      padding: 0;
+      & :global(.MuiButton-root) {
+        width: 100%;
+        max-width: unset;
+        min-height: 200px;
+        max-height: 200px;
       }
     }
+  }
+
+  .dropdownContainer {
+    flex-direction: column;
+    width: 100%;
+    padding: 0;
+    padding-top: 1rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+
+    & .numberOfChoices {
+      text-align: center;
+    }
+  }
+
+  .topicTextField {
+    width: 100%;
+  }
+
+  .footer {
+    width: 100%;
+    gap: 0.5rem;
+    flex-direction: column;
+
+    & :global(.MuiButton-root) {
+      width: 100%;
+    }
+  }
+
+  .dropdown {
+    width: 100%;
   }
 }
