@@ -1,56 +1,50 @@
-import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
 import styles from "./SharePage.module.css";
 import CheckIcon from "../../images/check.svg?react";
 import CopyIcon from "../../images/copy.svg?react";
-import { useState } from "react";
-import { supabase } from "../../lib/supabaseClient";
-import LoadingPage from "../../components/Loading";
+import { Button, Typography } from "@mui/material";
 
-export default function SharePage() {
-  const { roomId } = useParams()
-  const navigate = useNavigate();
+interface SharePageProps {
+  roomId?: string;
+  mode?: string;
+  title?: string;
+  isHost?: boolean;
+  onStartChoices?: () => void;
+}
+
+export default function SharePage({
+  roomId,
+  mode,
+  title,
+  isHost,
+  onStartChoices,
+}: SharePageProps) {
   const [copied, setCopied] = useState(false);
-  const [poll, setPoll] = useState<any>(null)
+  console.log(isHost)
 
-  useEffect(() => {
-    if (!roomId) return
-    supabase.from('polls').select('*').eq('id', roomId).single()
-      .then(({ data }) => setPoll(data))
-  }, [roomId])
-
-  if (!poll) return <LoadingPage />
-
-  // Determine share link based on mode
-  // "onlyMe": guests go to ranking; "everyone": guests go to choice page
-  const link =
-    poll.mode === 'everyone'
-      ? `${location.origin}/choice/${roomId}`
-      : `${location.origin}/results/${roomId}`
+  // Share link always goes to /room/:roomId; RoomPage handles redirecting guests based on status
+  const shareLink = `${window.location.origin}/room/${roomId ?? ""}`;
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(link);
+      await navigator.clipboard.writeText(shareLink);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (e) {
-      // ignore
+      console.error("Failed to copy link", e);
     }
-  };
-
-  const handleNext = () => {
-    navigate(
-      poll.mode === 'everyone'
-        ? `/choice/${roomId}`
-        : `/ranking/${roomId}`
-    )
   };
 
   return (
     <div className={styles.confirmationContainer}>
       <CheckIcon className={styles.check} />
-      <h2 className={styles.pollCreated}>Poll Created</h2>
-      <h3 className={styles.topic}>Topic: {poll.title ?? "Untitled"}</h3>
+      <h2 className={styles.pollCreated}>Poll Created!</h2>
+      <h3 className={styles.topic}>Topic: {title ?? "Untitled"}</h3>
+
+      <p className={styles.instructions}>
+        Share this link with participants to let them join the poll. They will be redirected
+        to the room once they open it.
+      </p>
 
       <div className={styles.shareRow}>
         <button className={styles.shareButton} onClick={handleCopy}>
@@ -60,11 +54,31 @@ export default function SharePage() {
         {copied && <span className={styles.copied}>Copied!</span>}
       </div>
 
-      <div className={styles.nextRow}>
-        <button className={styles.nextButton} onClick={handleNext}>
-          Next
-        </button>
-      </div>
+      <p style={{ textAlign: "center", marginTop: "1rem", fontSize: "0.9rem", color: "#999" }}>
+        Press the button below when you're ready to begin.
+      </p>
+
+      {isHost && mode === "everyone" && (
+        <div className={styles.startButtonContainer}>
+          <Button variant="contained" onClick={onStartChoices}>
+            Start Adding Choices
+          </Button>
+        </div>
+      )}
+
+      {isHost && mode === "onlyMe" && (
+        <div className={styles.startButtonContainer}>
+          <Button variant="contained" onClick={onStartChoices}>
+            Start Ranking
+          </Button>
+        </div>
+      )}
+
+      {!isHost && (
+        <p className={styles.waitingMessage}>
+          You will be able to suggest choices once the host starts the process.
+        </p>
+      )}
     </div>
   );
 }

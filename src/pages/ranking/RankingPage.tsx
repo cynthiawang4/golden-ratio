@@ -6,42 +6,72 @@ import StarIcon from "../../images/star.svg?react";
 import LoadingPage from "../../components/Loading";
 import { supabase } from "../../lib/supabaseClient";
 
-export default function RankingPage() {
-  const { roomId } = useParams();
+interface RankingPageProps {
+  roomId?: string;
+  isHost?: boolean;
+}
+
+export default function RankingPage({ roomId: propRoomId, isHost }: RankingPageProps) {
+  const { roomId: paramRoomId } = useParams();
+  const roomId = propRoomId || paramRoomId;
   const [loading, setLoading] = useState<boolean>(true);
-  const [choices, setChoices] = useState<string[]>([]);
+  const [choices, setChoices] = useState<any[]>([]);
   const [userChoices, setUserChoices] = useState<string[]>([]);
   const [topic, setTopic] = useState<string>("");
-  const [numChoicesToChoose, setNumChoicesToChoose] = useState<number>(
-    choices.length,
-  );
+  const [numChoicesToChoose, setNumChoicesToChoose] = useState<number>(2);
 
   useEffect(() => {
     if (!roomId) return;
-    try {
-      setLoading(true);
-      
-      supabase.from('choices')
-        .select('*')
-        .eq('poll_id', roomId)
-        .then(({ data }) => setChoices(data || []))
 
-      let choicesToChoose = 2;
-      // Validate choices
-      if (choices.length < choicesToChoose) {
-        choicesToChoose = choices.length;
+    const fetchPollData = async () => {
+      try {
+        setLoading(true);
+
+        // Fetch poll info
+        const { data: pollData, error: pollError } = await supabase
+          .from("polls")
+          .select("title, num_choices, status, mode")
+          .eq("id", roomId)
+          .single();
+
+        if (pollError) throw pollError;
+
+        setTopic(pollData?.title || "");
+        setNumChoicesToChoose(pollData?.num_choices || 2);
+
+        // Fetch choices for this poll
+        const { data: choicesData, error: choicesError } = await supabase
+          .from("choices")
+          .select("*")
+          .eq("poll_id", roomId);
+
+        if (choicesError) throw choicesError;
+
+        setChoices(choicesData || []);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
       }
-      setNumChoicesToChoose(choicesToChoose);
-      console.log(numChoicesToChoose);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    fetchPollData();
   }, [roomId]);
+
+  // Validate if there are fewer choices than num_choices
+  useEffect(() => {
+    if (choices.length < numChoicesToChoose) {
+      setNumChoicesToChoose(choices.length);
+    }
+  }, [choices, numChoicesToChoose]);
 
   // Submit rankings to database
   const handleNext = async () => {
+    if (!isHost) {
+      // Guests shouldn't be able to submit rankings
+      return;
+    }
+
     const { data: user } = await supabase.auth.getUser();
     const userId = user?.user?.id;
     if (!userId) return;
@@ -59,6 +89,17 @@ export default function RankingPage() {
 
     const { error } = await supabase.from('votes').insert(inserts);
     if (error) console.error(error);
+
+    // After submission, move to the results page (if the poll mode is "everyone")
+    if (isHost) {
+      await supabase
+        .from("polls")
+        .update({ status: "revealed" })
+        .eq("id", roomId);
+
+      // This could navigate to the results page after submission (if appropriate)
+      window.location.href = `/room/${roomId}/results`;
+    }
   };
 
   const handleChoiceButton = (choiceText: string) => {
@@ -77,7 +118,6 @@ export default function RankingPage() {
       // .slice(0, -1) gets everything except the last element
       return [...prev.slice(0, -1), choiceText];
     });
-    console.log(userChoices);
   };
 
   if (loading) return <LoadingPage />;
@@ -147,7 +187,7 @@ function ButtonColumn({ onNext, disabled }: ButtonColumnProps) {
     <div className={styles.buttonContainer}>
       <StarIcon className={`${onNext === undefined ? styles.hide : ""}`} />
       <Button
-        variant="primary"
+        variant="contained"
         onClick={onNext}
         disabled={disabled}
         className={`${onNext === undefined ? styles.hide : ""}`}
