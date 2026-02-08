@@ -7,6 +7,8 @@
   gap: 1rem;
   background-color: var(--background);
   color: #f5d8c0;
+  padding: 0.5rem;
+  box-sizing: border-box;
 }
 
 .check {
@@ -15,19 +17,21 @@
 }
 
 .pollCreated {
-  font-family: 'Madimi One', cursive;
+  font-family: "Madimi One", cursive;
   font-size: 64px;
   font-weight: 500;
   color: #f5d8c0;
   margin: 0.5rem 0;
+  text-align: center;
 }
 
 .topic {
-  font-family: 'Madimi One', cursive;
+  font-family: "Madimi One", cursive;
   font-size: 48px;
   font-weight: 500;
-  color: #F8AA69;
+  color: #f8aa69;
   margin: 0;
+  text-align: center;
 }
 
 .shareRow {

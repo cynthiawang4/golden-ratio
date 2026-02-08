@@ -1,5 +1,4 @@
 import { useCallback, useRef } from "react";
-import Golden from "../../images/golden.mp3";
 
 export default function useGoldenMusic() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -25,7 +24,7 @@ export default function useGoldenMusic() {
   }, []);
 
   return {
-    audio: <audio ref={audioRef} src={Golden} preload="auto" />,
+    audio: <audio ref={audioRef} src={"/golden.mp3"} preload="auto" />,
     play: playSpecificPortion,
   };
 }
