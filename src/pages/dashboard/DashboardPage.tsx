@@ -86,25 +86,32 @@ export default function DashboardPage() {
       </div>
       <div className={styles.content}>
         <Typography className={styles.name}>Hello {name}</Typography>
-        <div className={styles.buttonContainer}>
-          <ToggleButtonGroup
-            value={showCreated}
-            exclusive // Ensures only one button can be active at a time
-            onChange={(_, newValue) => {
-              if (newValue !== null) {
-                setShowCreated(newValue);
-              }
-            }}
+        <ToggleButtonGroup
+          className={styles.buttonContainer}
+          value={showCreated}
+          exclusive // Ensures only one button can be active at a time
+          onChange={(_, newValue) => {
+            if (newValue !== null) {
+              setShowCreated(newValue);
+            }
+          }}
+          color="primary"
+        >
+          <ToggleButton
             color="primary"
+            value={true}
+            className={styles.toggleButton}
           >
-            <ToggleButton color="primary" value={true}>
-              Created Topics
-            </ToggleButton>
-            <ToggleButton color="primary" value={false}>
-              Topics in Progress
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </div>
+            Created Topics
+          </ToggleButton>
+          <ToggleButton
+            color="primary"
+            value={false}
+            className={styles.toggleButton}
+          >
+            Topics in Progress
+          </ToggleButton>
+        </ToggleButtonGroup>
         <div className={styles.sessionContainer}>
           {sessionsToShow.map((s) => {
             const isSelected = s.id === selectedSession;
