@@ -19,13 +19,11 @@ export default function CreateChoicePage() {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const [topic, setTopic] = useState<string>("");
-  const [maxChoices, setMaxChoices] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
-  const [textInput, setTextInput] = useState<string>("");
+  const [input, setInput] = useState<string>("");
   const [choices, setChoices] = useState<any[]>([]);
   const [savedLabels, setSavedLabels] = useState<Set<string>>(new Set());
-  const [ownerId, setOwnerId] = useState<string | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [poll, setPoll] = useState<any>(null)
 
   useEffect(() => {
     if (!roomId) return;
@@ -33,17 +31,12 @@ export default function CreateChoicePage() {
       setLoading(true);
       // load poll from Supabase
       (async () => {
-        const { data: poll, error } = await supabase
-          .from("polls")
-          .select("title, owner_id")
-          .eq("id", roomId)
-          .single();
-        if (!error && poll) {
-          setTopic((poll as any).title || "What to eat?");
-          setOwnerId((poll as any).owner_id ?? null);
-        } else {
-          setTopic("What to eat?");
-        }
+        const { data } = await supabase
+          .from('polls')
+          .select('*')
+          .eq('id', roomId)
+          .single()
+        setPoll(data)
 
         const { data: choiceList } = await supabase
           .from("choices")
@@ -52,10 +45,6 @@ export default function CreateChoicePage() {
         const labels = ((choiceList as any) || []).map((c: any) => c.label);
         setChoices(labels);
         setSavedLabels(new Set(labels));
-
-        const { data: userData } = await auth.getUser();
-        setUser((userData as any)?.user ?? null);
-        setMaxChoices(3);
       })();
     } catch (e) {
       console.error(e);
@@ -64,8 +53,8 @@ export default function CreateChoicePage() {
     }
   }, [roomId]);
 
-  const handleSuggestChoice = () => {
-    const trimmedInput = textInput.trim();
+  const handleAddChoice = () => {
+    const trimmedInput = input.trim();
     // 1. Prevent adding empty strings
     if (!trimmedInput) return;
 
@@ -85,7 +74,7 @@ export default function CreateChoicePage() {
     // 3. Add to the front using the spread operator
     setChoices([trimmedInput, ...choices]);
     // 4. Clear the input
-    setTextInput("");
+    setInput("");
   };
 
   // Add suggested choices to the database
@@ -102,6 +91,17 @@ export default function CreateChoicePage() {
         .from("choices")
         .insert(payload)
         .select("id,label");
+
+      if (poll.mode === 'everyone') {
+        await supabase
+          .from('polls')
+          .update({ status: 'ranking' })
+          .eq('id', roomId)
+        navigate(`/ranking/${roomId}`)
+      } else {
+        navigate(`/share/${roomId}`)
+      }
+
       if (error) throw error;
       const insertedLabels = ((inserted as any) || []).map((i: any) => i.label);
       const newSaved = new Set(savedLabels);
@@ -129,18 +129,18 @@ export default function CreateChoicePage() {
         <div className={styles.textFieldContainer}>
           <Typography className={styles.label}>Write Your Choice</Typography>
           <TextField
-            value={textInput}
+            value={input}
             onChange={(e) => {
-              if (textInput.length === MAX_CHOICE_LENGTH) return;
-              setTextInput(e.target.value);
+              if (input.length === MAX_CHOICE_LENGTH) return;
+              setInput(e.target.value);
             }}
             className={styles.choiceTextField}
-            helperText={`${textInput.length} / ${MAX_CHOICE_LENGTH}`}
+            helperText={`${input.length} / ${MAX_CHOICE_LENGTH}`}
           />
           <Stack direction={"row"} justifyContent={"flex-end"} width={"100%"}>
             <Button
-              onClick={handleSuggestChoice}
-              disabled={textInput.length === 0}
+              onClick={handleAddChoice}
+              disabled={input.length === 0}
               className={styles.choiceButton}
               variant="primary"
             >
@@ -165,7 +165,6 @@ export default function CreateChoicePage() {
             })}
           </div>
           <Button
-            disabled={choices.length >= maxChoices}
             onClick={handleSubmit}
             className={styles.choiceButton}
             variant="primary"

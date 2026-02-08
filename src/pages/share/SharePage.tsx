@@ -1,24 +1,36 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "./SharePage.module.css";
 import CheckIcon from "../../images/check.svg?react";
 import CopyIcon from "../../images/copy.svg?react";
 import { useState } from "react";
+import { supabase } from "../../lib/supabaseClient";
+import LoadingPage from "../../components/Loading";
 
 export default function SharePage() {
-  const location = useLocation();
+  const { roomId } = useParams()
   const navigate = useNavigate();
-  const { topic, roomId, mode } = (location.state as any) || {};
   const [copied, setCopied] = useState(false);
+  const [poll, setPoll] = useState<any>(null)
+
+  useEffect(() => {
+    if (!roomId) return
+    supabase.from('polls').select('*').eq('id', roomId).single()
+      .then(({ data }) => setPoll(data))
+  }, [roomId])
+
+  if (!poll) return <LoadingPage />
 
   // Determine share link based on mode
-  // "onlyMe": guests see rankings; "everyone": guests go to choice page
-  const shareLink = mode === "onlyMe" 
-    ? `${window.location.origin}/results/${roomId ?? ""}`
-    : `${window.location.origin}/choice/${roomId ?? ""}`;
+  // "onlyMe": guests go to ranking; "everyone": guests go to choice page
+  const link =
+    poll.mode === 'everyone'
+      ? `${location.origin}/choice/${roomId}`
+      : `${location.origin}/results/${roomId}`
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(shareLink);
+      await navigator.clipboard.writeText(link);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (e) {
@@ -27,14 +39,18 @@ export default function SharePage() {
   };
 
   const handleNext = () => {
-    navigate(`/choice/${roomId ?? ""}`);
+    navigate(
+      poll.mode === 'everyone'
+        ? `/choice/${roomId}`
+        : `/ranking/${roomId}`
+    )
   };
 
   return (
     <div className={styles.confirmationContainer}>
       <CheckIcon className={styles.check} />
       <h2 className={styles.pollCreated}>Poll Created</h2>
-      <h3 className={styles.topic}>Topic: {topic ?? "Untitled"}</h3>
+      <h3 className={styles.topic}>Topic: {poll.title ?? "Untitled"}</h3>
 
       <div className={styles.shareRow}>
         <button className={styles.shareButton} onClick={handleCopy}>
