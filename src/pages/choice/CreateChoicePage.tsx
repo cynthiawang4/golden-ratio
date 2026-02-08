@@ -77,7 +77,7 @@ export default function CreateChoicePage() {
     setTextInput("");
   };
 
-  // CYNTHIA ADD CHOICES TO DATABASE THEY CAN SEND EMPTY
+  // Add suggested choices to the database
   const handleSubmit = async () => {
     if (!roomId) return;
     try {
@@ -98,7 +98,7 @@ export default function CreateChoicePage() {
     }
   };
 
-  // CYNTHIA IF HOST DELETE ROOM?? ELSE GO BACK TO LANDING PAGE?
+  // TODO: implement what to do on back button
   const handleOnBack = () => {};
 
   return (

@@ -11,6 +11,7 @@ const MAX_TOPIC_LENGTH = 127;
 export default function HostPage() {
   const navigate = useNavigate();
   const [textInput, setTextInput] = useState<string>("");
+  const [selectedMode, setSelectedMode] = useState<"everyone" | "onlyMe" | null>(null);
   const id = useId();
 
   // restore topic after OAuth redirect if present
@@ -28,6 +29,9 @@ export default function HostPage() {
   }, []);
 
   const handleNext = async () => {
+    // require mode selection first
+    if (!selectedMode) return;
+    
     // require host to be signed in before creating poll
     try {
       const { data: userData } = await auth.getUser();
@@ -45,7 +49,7 @@ export default function HostPage() {
       const { data, error } = await supabase.from("polls").insert(insert).select("id").single();
       if (error) throw error;
       const pollId = (data as any).id as string;
-      navigate(`/confirmation`, { state: { topic: textInput || "Untitled", roomId: pollId } });
+      navigate(`/confirmation`, { state: { topic: textInput || "Untitled", roomId: pollId, mode: selectedMode } });
     } catch (e) {
       console.error("Failed to create poll", e);
     }
@@ -72,18 +76,24 @@ export default function HostPage() {
         Who is providing the choices?
       </Typography>
       <div className={styles.buttonContainer}>
-        <Button>
+        <Button
+          onClick={() => setSelectedMode("everyone")}
+          className={selectedMode === "everyone" ? styles.selected : ""}
+        >
           <Typography>Everyone</Typography>
           <EveryoneIcon className={styles.everyoneIcon} />
         </Button>
-        <Button>
+        <Button
+          onClick={() => setSelectedMode("onlyMe")}
+          className={selectedMode === "onlyMe" ? styles.selected : ""}
+        >
           <Typography>Only Me!</Typography>
           <ForMeIcon className={styles.forMeIcon} />
         </Button>
       </div>
 
       <div className={styles.nextContainer}>
-        <Button onClick={handleNext} variant="contained">
+        <Button onClick={handleNext} variant="contained" disabled={!selectedMode}>
           Next
         </Button>
       </div>

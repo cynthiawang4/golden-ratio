@@ -1,16 +1,20 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import styles from "./ConfirmationPage.module.css";
+import styles from "./SharePage.module.css";
 import CheckIcon from "../../images/check.svg?react";
 import CopyIcon from "../../images/copy.svg?react";
 import { useState } from "react";
 
-export default function ConfirmationPage() {
+export default function SharePage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { topic, roomId } = (location.state as any) || {};
+  const { topic, roomId, mode } = (location.state as any) || {};
   const [copied, setCopied] = useState(false);
 
-  const shareLink = `${window.location.origin}/choice/${roomId ?? ""}`;
+  // Determine share link based on mode
+  // "onlyMe": guests see rankings; "everyone": guests go to choice page
+  const shareLink = mode === "onlyMe" 
+    ? `${window.location.origin}/results/${roomId ?? ""}`
+    : `${window.location.origin}/choice/${roomId ?? ""}`;
 
   const handleCopy = async () => {
     try {
