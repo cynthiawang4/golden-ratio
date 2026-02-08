@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./RoomPage.module.css";
-import { Typography, CircularProgress, Button } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 import { supabase, auth } from "../../lib/supabaseClient";
 import SharePage from "../share/SharePage";
 import CreateChoicePage from "../choice/CreateChoicePage";
 import RankingPage from "../ranking/RankingPage";
 import RevealPage from "../reveal/RevealPage";
 import ResultsPage from "../results/ResultsPage";
+import LoadingPage from "../../components/Loading";
 
 type PollStatus =
   | "setup"
@@ -82,35 +83,35 @@ export default function RoomPage() {
     setIsRevealing(true); // Change to revealing state
   };
 
-  if (loading) return <CircularProgress />;
+  if (loading) return <LoadingPage />;
   if (!poll) return <Typography>Poll not found</Typography>;
 
   const isHost = user?.id === poll.owner_id;
-  console.log("room", isHost)
+  console.log("room", isHost);
 
   // ---------------- Render appropriate page ----------------
   const renderPage = () => {
     switch (poll.status as PollStatus) {
       case "setup":
         return (
-          <SharePage 
-            roomId={roomId} 
-            mode={poll.mode} 
-            title={poll.title} 
-            isHost={isHost} 
-            onStartChoices={() => updatePollStatus("collecting")} 
+          <SharePage
+            roomId={roomId}
+            mode={poll.mode}
+            title={poll.title}
+            isHost={isHost}
+            onStartChoices={() => updatePollStatus("collecting")}
           />
         );
       case "collecting":
         return <CreateChoicePage roomId={roomId} poll={poll} isHost={isHost} />;
       case "collectingDone":
         return (
-          <SharePage 
-            roomId={roomId} 
-            mode={poll.mode} 
-            title={poll.title} 
-            isHost={isHost} 
-            onStartChoices={() => updatePollStatus("ranking")} 
+          <SharePage
+            roomId={roomId}
+            mode={poll.mode}
+            title={poll.title}
+            isHost={isHost}
+            onStartChoices={() => updatePollStatus("ranking")}
           />
         );
       case "ranking":
