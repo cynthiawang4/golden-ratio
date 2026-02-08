@@ -13,6 +13,7 @@
   gap: 1rem;
   background-color: var(--background);
   overflow-y: auto;
+  
 
   & .title:global(.MuiTypography-root) {
     font-weight: 600;
@@ -21,6 +22,7 @@
     line-height: 1.5;
     letter-spacing: 0;
     text-align: center;
+    
     font-family: 'Kulim park', sans-serif;
   }
 }
@@ -97,8 +99,10 @@
     border-radius: 30px;
     display: flex;
     flex-direction: column;
-    padding: 1rem;
+    padding: 2rem;
     gap: 1rem;
+ 
+
     transition: all 0.2s;
 
     &:hover {
@@ -133,6 +137,16 @@
       & :global(.MuiTypography-root),
       & svg {
         color: white;
+      }
+    }
+  }
+}
+@media (max-width: 768px) {
+  .hostContainer {
+      & .buttonContainer {
+       & :global(.MuiButton-root) {
+        flex: 1;
+        aspect-ratio: 1;
       }
     }
   }

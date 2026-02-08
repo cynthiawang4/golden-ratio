@@ -76,14 +76,14 @@ export default function HostPage() {
         Who is providing the choices?
       </Typography>
       <div className={styles.buttonContainer}>
-        <Button
+        <Button className={styles.hostButton} variant="primary"
           onClick={() => setMode("everyone")}
           className={mode === "everyone" ? styles.selected : ""}
         >
           <Typography>Everyone</Typography>
           <EveryoneIcon className={styles.everyoneIcon} />
         </Button>
-        <Button
+        <Button className={styles.hostButton} variant="primary"
           onClick={() => setMode("onlyMe")}
           className={mode === "onlyMe" ? styles.selected : ""}
         >
@@ -117,7 +117,7 @@ export default function HostPage() {
           </div>
         </div>
       <div className={styles.nextContainer}>
-        <Button onClick={handleNext} variant="primary" disabled={!mode}>
+        <Button onClick={handleNext} variant="primary"disabled={!mode}>
           Next
         </Button>
       </div>

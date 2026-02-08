@@ -10,6 +10,7 @@ import CreateChoicePage from "./pages/choice/CreateChoicePage";
 import RoomPage from "./pages/room/RoomPage";
 import RankingPage from "./pages/ranking/Ranking";
 import ResultsPage from "./pages/results/ResultsPage";
+import ThanksVotePage from "./pages/thanks-vote/ThanksVote";
 
 export default function App() {
   return (
@@ -23,6 +24,8 @@ export default function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/share/:roomId" element={<SharePage />} />
         <Route path="/choice/:roomId" element={<CreateChoicePage />} />
+        <Route path="/voted/:roomId" element={<ThanksVotePage />} />
+
         <Route path="/ranking/:roomId" element={<RankingPage />} />
         <Route path="/results/:roomId" element={<ResultsPage />} />
       </Routes>

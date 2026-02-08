@@ -89,3 +89,17 @@
 .sep {
   color: #f5d8c0;
 }
+@media (max-width: 768px) {
+  .mainContainer {
+    background-image: url('/src/images/golden-ratio-small.png');
+    & .title:global(.MuiTypography-root) {
+      font-size: 46px;
+    }
+    & :global(.MuiButton-root) {
+      font-size: 20px;
+    }
+    & .contentContainer {
+      width: 100%;
+    }
+  }
+}
