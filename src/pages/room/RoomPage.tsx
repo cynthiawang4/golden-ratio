@@ -4,10 +4,9 @@ import styles from "./RoomPage.module.css";
 import { CircularProgress, Typography } from "@mui/material";
 import LoadingPage from "../../components/Loading";
 
-// CYNTHIA THIS IS TEMP IDK WHAT THE DB STATES ARE
 type RoomState = "choice" | "rank";
 
-// EVERYONE LANDS HERE BUT GETS REDIRECTED BASED ON ROOM STATE CYNTHIA
+// TODO: Implement redirection based on "everyone" or "only me" choice
 export default function RoomPage() {
   const { roomId } = useParams();
   const navigate = useNavigate();

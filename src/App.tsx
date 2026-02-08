@@ -5,7 +5,7 @@ import HostPage from "./pages/host/HostPage";
 import LoginPage from "./pages/login/LoginPage";
 import SignupPage from "./pages/signup/SignupPage";
 import ProfilePage from "./pages/profile/ProfilePage";
-import ConfirmationPage from "./pages/host/ConfirmationPage";
+import SharePage from "./pages/share/SharePage";
 import CreateChoicePage from "./pages/choice/CreateChoicePage";
 import RoomPage from "./pages/room/RoomPage";
 import RankingPage from "./pages/ranking/Ranking";
@@ -21,7 +21,7 @@ export default function App() {
         <Route path="/room/:roomId" element={<RoomPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/confirmation" element={<ConfirmationPage />} />
+        <Route path="/confirmation" element={<SharePage />} />
         <Route path="/results/:roomId" element={<ResultsPage />} />
         <Route path="/choice/:roomId" element={<CreateChoicePage />} />
         <Route path="/ranking/:roomId" element={<RankingPage />} />
