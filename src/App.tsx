@@ -8,6 +8,7 @@ import ProfilePage from "./pages/profile/ProfilePage";
 import ConfirmationPage from "./pages/host/ConfirmationPage";
 import CreateChoicePage from "./pages/choice/CreateChoicePage";
 import RoomPage from "./pages/room/RoomPage";
+import RankingPage from "./pages/ranking/Ranking";
 import ResultsPage from "./pages/results/ResultsPage";
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/confirmation" element={<ConfirmationPage />} />
         <Route path="/results/:roomId" element={<ResultsPage />} />
         <Route path="/choice/:roomId" element={<CreateChoicePage />} />
+        <Route path="/ranking/:roomId" element={<RankingPage />} />
       </Routes>
     </ThemeWrapper>
   );

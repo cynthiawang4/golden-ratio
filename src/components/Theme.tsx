@@ -60,9 +60,19 @@ const themeOptions: ThemeOptions = {
       variants: [
         {
           props: { variant: "primary" },
-          style: ({ theme }) => ({
-            border: `2px solid ${theme.palette.primary.light}`,
-            color: theme.palette.primary.main,
+          style: () => ({
+            backgroundColor: "#fff",
+            borderRadius: "10px",
+            border: "5px solid #f5d8c0",
+            color: "#3E67B9",
+            boxShadow: "0px 6px 0px 0px #F5D8C0",
+
+            "&:hover": {
+              backgroundColor: "#78A5FF",
+              color: "#fff",
+              border: "5px solid #FFFFFF",
+              boxShadow: "0px 6px 0px 0px #B2CCFF",
+            },
           }),
         },
         {
@@ -83,9 +93,8 @@ const themeOptions: ThemeOptions = {
       ],
       styleOverrides: {
         root: ({ theme }) => ({
-          backgroundColor: theme.palette.background.default,
+          backgroundColor: "#fff",
           textTransform: "none",
-          borderRadius: "10px",
           "&:hover": {
             backgroundColor: theme.palette.action.hover,
             color: theme.palette.text.primary,
