@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styles from "./CreateChoicePage.module.css";
 import {
   CircularProgress,
@@ -11,24 +11,45 @@ import {
 import BaseButton from "../../components/BaseButton";
 import Trash from "../../images/trash.svg?react";
 import Back from "../../images/back.svg?react";
+import { supabase, auth } from "../../lib/supabaseClient";
 
 const MAX_CHOICE_LENGTH = 127;
 
 export default function CreateChoicePage() {
   const { roomId } = useParams();
+  const navigate = useNavigate();
   const [topic, setTopic] = useState<string>("");
   const [maxChoices, setMaxChoices] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [textInput, setTextInput] = useState<string>("");
-  const [choices, setChoices] = useState<string[]>([]);
+  const [choices, setChoices] = useState<any[]>([]);
+  const [savedLabels, setSavedLabels] = useState<Set<string>>(new Set());
+  const [ownerId, setOwnerId] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
 
-  // CYNTHIA SYNC WITH DB AND GET TOPIC QUESTION and MAX CHOICES OR SHOULD PROPS BE PASSED IDK
   useEffect(() => {
     if (!roomId) return;
     try {
       setLoading(true);
-      setTopic("What to eat?");
-      setMaxChoices(3);
+      // load poll from Supabase
+      (async () => {
+        const { data: poll, error } = await supabase.from("polls").select("title, owner_id").eq("id", roomId).single();
+        if (!error && poll) {
+          setTopic((poll as any).title || "What to eat?");
+          setOwnerId((poll as any).owner_id ?? null);
+        } else {
+          setTopic("What to eat?");
+        }
+
+        const { data: choiceList } = await supabase.from("choices").select("id, label").eq("poll_id", roomId);
+        const labels = ((choiceList as any) || []).map((c: any) => c.label);
+        setChoices(labels);
+        setSavedLabels(new Set(labels));
+
+        const { data: userData } = await auth.getUser();
+        setUser((userData as any)?.user ?? null);
+        setMaxChoices(3);
+      })();
     } catch (e) {
       console.error(e);
     } finally {
@@ -43,9 +64,8 @@ export default function CreateChoicePage() {
 
     // 2. Prevent duplicates (Case-insensitive check is usually better)
     if (
-      choices.some(
-        (choice) => choice.toLowerCase() === trimmedInput.toLowerCase(),
-      )
+      choices.some((choice) => choice.toLowerCase() === trimmedInput.toLowerCase()) ||
+      Array.from(savedLabels).some((s) => s.toLowerCase() === trimmedInput.toLowerCase())
     ) {
       //alert("This choice already exists!");
       return;
@@ -58,7 +78,25 @@ export default function CreateChoicePage() {
   };
 
   // CYNTHIA ADD CHOICES TO DATABASE THEY CAN SEND EMPTY
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    if (!roomId) return;
+    try {
+      // insert only new labels not already saved
+      const newLabels = choices.filter((label) => !savedLabels.has(label));
+      if (newLabels.length === 0) {
+        return;
+      }
+      const payload = newLabels.map((label) => ({ poll_id: roomId, label }));
+      const { data: inserted, error } = await supabase.from('choices').insert(payload).select('id,label');
+      if (error) throw error;
+      const insertedLabels = ((inserted as any) || []).map((i: any) => i.label);
+      const newSaved = new Set(savedLabels);
+      insertedLabels.forEach((l: string) => newSaved.add(l));
+      setSavedLabels(newSaved);
+    } catch (e) {
+      console.error('Failed to save choices', e);
+    }
+  };
 
   // CYNTHIA IF HOST DELETE ROOM?? ELSE GO BACK TO LANDING PAGE?
   const handleOnBack = () => {};

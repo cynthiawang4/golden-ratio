@@ -25,6 +25,12 @@
   }
 }
 
+.nextContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
 .topicContainer {
   display: flex;
   flex-direction: column;
@@ -54,8 +60,14 @@
   box-sizing: border-box;
 }
 .dropdownMenu {
-  width: 40px !important;
-  height: 55px !important;
+  min-width: 100px !important;
+}
+.dropdownItems {
+  display: flex !important;
+  justify-content: flex-end !important; 
+  text-align: right;
+  width: 100%;
+  padding: 8px 16px !important; 
 }
 .numberOfChoices {
   font-size: 400;
@@ -64,7 +76,6 @@
   font-weight: 900;
   font-family: 'Kulim park', sans-serif;
 }
-
 
 .buttonContainer {
   display: flex;
