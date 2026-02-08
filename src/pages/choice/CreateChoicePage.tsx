@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import styles from "./CreateChoicePage.module.css";
 import {
   Button,
-  CircularProgress,
   IconButton,
   Stack,
   TextField,
