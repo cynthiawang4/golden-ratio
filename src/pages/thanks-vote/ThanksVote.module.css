@@ -17,30 +17,29 @@
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
-    font-size: 64px;
-    font-family: 'Madimi One', cursive;
+    font-size: 2rem;
+    font-family: "Madimi One", cursive;
+    text-align: center;
 
     .check {
-        width: 96px;
-        height: 96px;
+      width: 96px;
+      height: 96px;
     }
     .topic {
-        font-size: 48px;
-        color: #F8AA69;
-        font-family: 'Madimi One', cursive;
+      font-size: 1rempx;
+      color: #f8aa69;
+      font-family: "Madimi One", cursive;
     }
     .waitMessage {
-        font-size: 24px;
-        color: var(--secondary-color);
-        text-align: center;
+      font-size: 24px;
+      color: var(--secondary-color);
+      text-align: center;
     }
   }
 }
 .titleWrapper {
-    width: 100%;
-    
+  width: 100%;
 }
 .backButton {
-    color: #fff !important;
+  color: #fff !important;
 }
-
