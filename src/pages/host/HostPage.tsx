@@ -1,4 +1,4 @@
-import { TextField, Typography, Menu, MenuItem, Button } from "@mui/material";
+import { Menu, MenuItem, Button, TextField, Typography } from "@mui/material";
 import styles from "./HostPage.module.css";
 import { useId, useEffect, useState } from "react";
 import EveryoneIcon from "../../images/everyone.svg?react";
@@ -18,19 +18,17 @@ export default function HostPage() {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget); // Sets the button as the anchor
   };
+
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  // Probably can add db stuff here
-  const navigateToChoicePage = () => {
-    // CYNTHIA TO DO DB HERE GENERATE ROOM CODE
-    const roomId = "1234";
-    navigate(`/choice/${roomId}`); //s: choice input page
+
   // restore topic after OAuth redirect if present
   useEffect(() => {
     try {
@@ -78,9 +76,9 @@ export default function HostPage() {
 
   return (
     <div className={styles.hostContainer}>
-      <div className={styles.topicContainer}> 
+      <div className={styles.topicContainer}>
         <Typography id={id} className={styles.topic}>
-          Topic 
+          Topic
         </Typography>
         <TextField
           placeholder="What to eat"
@@ -112,21 +110,33 @@ export default function HostPage() {
           <ForMeIcon className={styles.forMeIcon} />
         </Button>
       </div>
-      <div>
-        <div className={styles.dropdownContainer}>
+      <div className={styles.dropdownContainer}>
           <div className={styles.numberOfChoices}>
             <p>
-              Number of choices: 
+              Number of choices:
             </p>
           </div>
           <div>
-            <Button variant="contained" disabled={!selectedMode} onClick={handleClick}>
+            <Button variant="contained" onClick={handleClick}>
               None
             </Button>
             <Menu className={styles.dropdownItems}
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              slotProps={{
+                paper: {
+                  className: styles.dropdownMenu
+                }
+              }}
             >
               <MenuItem onClick={handleClose}>1</MenuItem>
               <MenuItem onClick={handleClose}>2</MenuItem>
@@ -135,8 +145,11 @@ export default function HostPage() {
             </Menu>
           </div>
         </div>
+      <div className={styles.nextContainer}>
+        <Button onClick={handleNext} variant="contained" disabled={!selectedMode}>
+          Next
+        </Button>
       </div>
     </div>
   );
-}
 }

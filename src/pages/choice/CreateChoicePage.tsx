@@ -9,7 +9,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import BaseButton from "../../components/BaseButton";
 import Trash from "../../images/trash.svg?react";
 import Back from "../../images/back.svg?react";
 import LoadingPage from "../../components/Loading";
