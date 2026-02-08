@@ -45,7 +45,7 @@ export default function MainPage() {
       },
     });
   };
-  
+
   const handleLogin = () => navigate("/login");
   const handleSignup = () => navigate("/signup");
   const handleProfile = () => navigate("/profile");
