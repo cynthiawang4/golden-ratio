@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./RoomPage.module.css";
-import { Typography, Button } from "@mui/material";
+import { Typography } from "@mui/material";
 import { supabase, auth } from "../../lib/supabaseClient";
 import SharePage from "../share/SharePage";
 import CreateChoicePage from "../choice/CreateChoicePage";
 import ThanksChoicesPage from "../thanks-choices/ThanksChoices";
 import RankingPage from "../ranking/RankingPage";
-import RevealPage from "../thanks-vote/ThanksVote";
 import ResultsPage from "../results/ResultsPage";
 import LoadingPage from "../../components/Loading";
 import ThanksVotePage from "../thanks-vote/ThanksVote";
@@ -26,7 +25,6 @@ export default function RoomPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [poll, setPoll] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
-  const [isRevealing, setIsRevealing] = useState<boolean>(false);
 
   useEffect(() => {
     if (!roomId) return;
@@ -98,21 +96,39 @@ export default function RoomPage() {
           />
         );
       case "collecting":
-        return <CreateChoicePage roomId={roomId} poll={poll} isHost={isHost} onDoneChoices={() => updatePollStatus("collectingDone")} />;
+        return (
+          <CreateChoicePage
+            roomId={roomId}
+            poll={poll}
+            isHost={isHost}
+            onDoneChoices={() => updatePollStatus("collectingDone")}
+          />
+        );
       case "collectingDone":
         return (
           <ThanksChoicesPage
-            roomId={roomId}
-            mode={poll.mode}
             title={poll.title}
             isHost={isHost}
             onStartVote={() => updatePollStatus("ranking")}
           />
         );
       case "ranking":
-        return <RankingPage roomId={roomId} num_choices={poll.num_choices} isHost={isHost} onDoneVote={() => updatePollStatus("rankingDone")} />;
+        return (
+          <RankingPage
+            roomId={roomId}
+            num_choices={poll.num_choices}
+            isHost={isHost}
+            onDoneVote={() => updatePollStatus("rankingDone")}
+          />
+        );
       case "rankingDone":
-        return <ThanksVotePage roomId={roomId} poll={poll} isHost={isHost} onReveal={() => updatePollStatus("revealed")} />;
+        return (
+          <ThanksVotePage
+            poll={poll}
+            isHost={isHost}
+            onReveal={() => updatePollStatus("revealed")}
+          />
+        );
       case "revealed":
         return <ResultsPage roomId={roomId} />;
       default:
@@ -120,9 +136,5 @@ export default function RoomPage() {
     }
   };
 
-  return (
-    <div className={styles.roomContainer}>
-      {renderPage()}
-    </div>
-  );
+  return <div className={styles.roomContainer}>{renderPage()}</div>;
 }

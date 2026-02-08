@@ -9,17 +9,13 @@ import ArrowRight from "../../images/arrow-right.svg?react";
 import CheckIcon from "../../images/check.svg?react";
 import Back from "../../images/back.svg?react";
 
-import { supabase } from "../../lib/supabaseClient";
-
 interface ThanksVotePageProps {
-  roomId: string;
   poll: any;
   isHost: boolean;
   onReveal: () => void;
 }
 
 export default function ThanksVotePage({
-  roomId,
   poll,
   isHost,
   onReveal,
@@ -47,21 +43,13 @@ export default function ThanksVotePage({
   if (isHost) {
     return (
       <div className={styles.revealContainer}>
-
-        <Typography className={styles.subtitle}>
-          The votes are in...
-        </Typography>
+        <Typography className={styles.subtitle}>The votes are in...</Typography>
 
         <div className={styles.revealWrapper}>
           <Spiral className={styles.spiral} />
           <div className={styles.revealButtonWrapper}>
-            <Typography className={styles.title}>
-              REVEAL RESULTS
-            </Typography>
-            <IconButton
-              className={styles.revealButton}
-              onClick={handleReveal}
-            >
+            <Typography className={styles.title}>REVEAL RESULTS</Typography>
+            <IconButton className={styles.revealButton} onClick={handleReveal}>
               <ArrowRight />
             </IconButton>
           </div>
@@ -94,9 +82,7 @@ export default function ThanksVotePage({
       <div className={thanksStyles.contentContainer}>
         <Typography variant="h6">Thanks for voting!</Typography>
 
-        <div className={thanksStyles.topic}>
-          Topic: {topic || "—"}
-        </div>
+        <div className={thanksStyles.topic}>Topic: {topic || "—"}</div>
 
         <div className={thanksStyles.waitMessage}>
           Please wait while we tally the results...

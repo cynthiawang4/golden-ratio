@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
 import Golden from "../../images/golden.mp3";
 
 export default function useGoldenMusic() {

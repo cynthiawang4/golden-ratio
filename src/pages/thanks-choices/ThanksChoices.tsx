@@ -1,23 +1,17 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "./ThanksChoices.module.css";
 import { IconButton } from "@mui/material";
 import CheckIcon from "../../images/check.svg?react";
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import Back from "../../images/back.svg?react";
-import { supabase, auth } from "../../lib/supabaseClient";
 
 interface ThanksChoicesPageProps {
-  roomId?: string;
-  mode?: string;
   title?: string;
   isHost?: boolean;
   onStartVote?: () => void;
 }
 
 export default function ThanksChoicesPage({
-  roomId,
-  mode,
   title,
   isHost,
   onStartVote,
@@ -43,7 +37,14 @@ export default function ThanksChoicesPage({
         <h3 className={styles.topic}>Topic: {title ?? "Untitled"}</h3>
 
         {isHost && (
-          <p style={{ textAlign: "center", marginTop: "1rem", fontSize: "0.9rem", color: "#999" }}>
+          <p
+            style={{
+              textAlign: "center",
+              marginTop: "1rem",
+              fontSize: "0.9rem",
+              color: "#999",
+            }}
+          >
             Press the button below when you're ready to begin.
           </p>
         )}

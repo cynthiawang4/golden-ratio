@@ -1,18 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "./CreateChoicePage.module.css";
-import {
-  Button,
-  IconButton,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, IconButton, TextField, Typography } from "@mui/material";
 import Trash from "../../images/trash.svg?react";
 import Back from "../../images/back.svg?react";
 import LoadingPage from "../../components/Loading";
-import { supabase, auth } from "../../lib/supabaseClient";
-import BackButton from "../../components/BackButton";
+import { supabase } from "../../lib/supabaseClient";
 
 const MAX_CHOICE_LENGTH = 127;
 
@@ -23,7 +16,12 @@ interface CreateChoicePageProps {
   onDoneChoices?: () => void;
 }
 
-export default function CreateChoicePage({ roomId, poll, isHost, onDoneChoices, }: CreateChoicePageProps) {
+export default function CreateChoicePage({
+  roomId,
+  poll,
+  isHost,
+  onDoneChoices,
+}: CreateChoicePageProps) {
   const navigate = useNavigate();
   const [input, setInput] = useState<string>("");
   const [choices, setChoices] = useState<any[]>([]);
@@ -101,7 +99,8 @@ export default function CreateChoicePage({ roomId, poll, isHost, onDoneChoices, 
 
   if (loading) return <LoadingPage />;
 
-  const isCollectingDone = poll?.status === "collectingDone" || poll?.status === "rankingDone";
+  const isCollectingDone =
+    poll?.status === "collectingDone" || poll?.status === "rankingDone";
 
   return (
     <div className={styles.choiceContainer}>
@@ -127,7 +126,11 @@ export default function CreateChoicePage({ roomId, poll, isHost, onDoneChoices, 
           <div className={styles.suggestButtonWrapper}>
             <Button
               onClick={handleAddChoice}
-              disabled={input.length === 0 || isCollectingDone || (!isHost && poll?.mode === "onlyMe")}
+              disabled={
+                input.length === 0 ||
+                isCollectingDone ||
+                (!isHost && poll?.mode === "onlyMe")
+              }
               className={styles.choiceButton}
               variant="primary"
             >
@@ -156,7 +159,11 @@ export default function CreateChoicePage({ roomId, poll, isHost, onDoneChoices, 
             onClick={handleSubmit}
             className={styles.choiceButton}
             variant="primary"
-            disabled={choices.length === 0 || isCollectingDone || (!isHost && poll?.mode === "onlyMe")}
+            disabled={
+              choices.length === 0 ||
+              isCollectingDone ||
+              (!isHost && poll?.mode === "onlyMe")
+            }
           >
             Upload
           </Button>

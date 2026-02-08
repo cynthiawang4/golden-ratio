@@ -23,16 +23,7 @@ export default function HostPage() {
   const id = useId();
 
   //dropdown?
-  const [choice, setChoice] = useState('');
-
-  // 2. Create the handler to update the state
-  const handleChange = (event: any) => {
-    setChoice(Number(event.target.value));
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const [choice, setChoice] = useState("");
 
   const handleNext = async () => {
     // Require mode selection first
@@ -48,15 +39,15 @@ export default function HostPage() {
     }
 
     const { data, error } = await supabase
-      .from('polls')
+      .from("polls")
       .insert({
-        title: textInput || 'Untitled',
+        title: textInput || "Untitled",
         owner_id: user.id,
         mode,
-        status: 'setup',
+        status: "setup",
         num_choices: choice || 3,
       })
-      .select('id')
+      .select("id")
       .single();
 
     if (error) return console.error(error);

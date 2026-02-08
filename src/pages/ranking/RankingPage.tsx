@@ -13,7 +13,12 @@ interface RankingPageProps {
   onDoneVote?: () => void;
 }
 
-export default function RankingPage({ roomId: propRoomId, num_choices, isHost, onDoneVote }: RankingPageProps) {
+export default function RankingPage({
+  roomId: propRoomId,
+  num_choices,
+  isHost,
+  onDoneVote,
+}: RankingPageProps) {
   const { roomId: paramRoomId } = useParams();
   const roomId = propRoomId || paramRoomId;
   const [loading, setLoading] = useState<boolean>(true);
@@ -64,18 +69,20 @@ export default function RankingPage({ roomId: propRoomId, num_choices, isHost, o
     const userId = user?.user?.id;
     if (!userId) return;
 
-    const inserts = userChoices.map((choiceLabel, index) => {
-      const choice = choices.find(c => c.label === choiceLabel);
-      if (!choice) return null;
-      return {
-        poll_id: roomId,
-        choice_id: choice.id,
-        user_id: userId,
-        rank: index + 1, // 1 = top rank, 2 = second, etc.
-      };
-    }).filter(Boolean);
+    const inserts = userChoices
+      .map((choiceLabel, index) => {
+        const choice = choices.find((c) => c.label === choiceLabel);
+        if (!choice) return null;
+        return {
+          poll_id: roomId,
+          choice_id: choice.id,
+          user_id: userId,
+          rank: index + 1, // 1 = top rank, 2 = second, etc.
+        };
+      })
+      .filter(Boolean);
 
-    const { error } = await supabase.from('votes').insert(inserts);
+    const { error } = await supabase.from("votes").insert(inserts);
     if (error) console.error(error);
 
     // After submission, move to rankingDone
@@ -116,9 +123,11 @@ export default function RankingPage({ roomId: propRoomId, num_choices, isHost, o
           </Typography>
         </Stack>
         <div className={styles.choiceContainer}>
-          {choices.map((choice, i) => {
+          {choices.map((choice) => {
             const choiceText = choice.label;
-            const userChoiceIndex = userChoices.findIndex((c) => c === choiceText);
+            const userChoiceIndex = userChoices.findIndex(
+              (c) => c === choiceText,
+            );
             return (
               <ChoiceButton
                 key={choice.id}
@@ -130,11 +139,7 @@ export default function RankingPage({ roomId: propRoomId, num_choices, isHost, o
           })}
         </div>
       </div>
-      {isHost && (
-        <ButtonColumn
-          onNext={onDoneVote}
-        />
-      )}
+      {isHost && <ButtonColumn onNext={onDoneVote} />}
       <Button
         onClick={handleNext}
         className={styles.choiceButton}

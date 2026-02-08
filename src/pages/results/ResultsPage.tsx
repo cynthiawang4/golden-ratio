@@ -12,14 +12,18 @@ interface ResultsPageProps {
   roomId?: string;
 }
 
+type Result = {
+  id: string;
+  label: string;
+  score: number;
+};
+
 export default function ResultsPage({ roomId: propRoomId }: ResultsPageProps) {
   const { roomId: paramRoomId } = useParams();
   const roomId = propRoomId || paramRoomId;
   const navigate = useNavigate();
 
-  const [results, setResults] = useState<
-    Array<{ id: string; label: string; score: number }>
-  >([]);
+  const [results, setResults] = useState<Result[]>([]);
   const [loading, setLoading] = useState(true);
 
   const { audio, play } = useGoldenMusic();
@@ -28,7 +32,7 @@ export default function ResultsPage({ roomId: propRoomId }: ResultsPageProps) {
     results[1], // 2nd
     results[0], // 1st
     results[2], // 3rd
-  ].filter(Boolean);
+  ].filter((p): p is Result => !!p);
 
   useEffect(() => {
     if (!roomId) return;
@@ -100,16 +104,9 @@ export default function ResultsPage({ roomId: propRoomId }: ResultsPageProps) {
 
       <div className={styles.podiumWrapper}>
         {podiumOrder.map((r, i) => {
-          const rank =
-            i === 1 ? "1" : i === 0 ? "2" : "3";
+          const rank = i === 1 ? "1" : i === 0 ? "2" : "3";
 
-          return (
-            <Podium
-              key={r.id}
-              rank={rank}
-              text={r.label}
-            />
-          );
+          return <Podium key={r.id} rank={rank} text={r.label} />;
         })}
       </div>
     </div>
