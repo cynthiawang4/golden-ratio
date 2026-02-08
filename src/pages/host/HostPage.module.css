@@ -83,16 +83,11 @@
 
 .numberOfChoices:global(.MuiTypography-root) {
   font-size: 400;
-  color: var(--primary-color);
-  font-size: 1.5rem;
-  font-weight: 700;
-  font-family: "Kulim park", sans-serif;
+  color: var(--title-text);
+  font-size: 2rem;
+  font-weight: 900;
+  font-family: 'Kulim park', sans-serif;
 }
-
-.topicTextField {
-  width: 70%;
-}
-
 .buttonContainer {
   display: flex;
   flex-direction: row;

@@ -16,29 +16,23 @@ import BackButton from "../../components/BackButton";
 
 const MAX_CHOICE_LENGTH = 127;
 
-export default function CreateChoicePage() {
-  const { roomId } = useParams();
+interface CreateChoicePageProps {
+  roomId?: string;
+  poll: any;
+  isHost: boolean;
+}
+
+export default function CreateChoicePage({ roomId, poll, isHost }: CreateChoicePageProps) {
   const navigate = useNavigate();
-  const [topic, setTopic] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
   const [input, setInput] = useState<string>("");
   const [choices, setChoices] = useState<any[]>([]);
   const [savedLabels, setSavedLabels] = useState<Set<string>>(new Set());
-  const [poll, setPoll] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (!roomId) return;
-    try {
+    const fetchChoices = async () => {
       setLoading(true);
-      // load poll from Supabase
-      (async () => {
-        const { data } = await supabase
-          .from("polls")
-          .select("*")
-          .eq("id", roomId)
-          .single();
-        setPoll(data);
-
+      try {
         const { data: choiceList } = await supabase
           .from("choices")
           .select("id, label")
@@ -46,20 +40,19 @@ export default function CreateChoicePage() {
         const labels = ((choiceList as any) || []).map((c: any) => c.label);
         setChoices(labels);
         setSavedLabels(new Set(labels));
-      })();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
+      } catch (e) {
+        console.error("Error fetching choices", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchChoices();
   }, [roomId]);
 
   const handleAddChoice = () => {
     const trimmedInput = input.trim();
-    // 1. Prevent adding empty strings
     if (!trimmedInput) return;
 
-    // 2. Prevent duplicates (Case-insensitive check is usually better)
     if (
       choices.some(
         (choice) => choice.toLowerCase() === trimmedInput.toLowerCase(),
@@ -68,25 +61,21 @@ export default function CreateChoicePage() {
         (s) => s.toLowerCase() === trimmedInput.toLowerCase(),
       )
     ) {
-      //alert("This choice already exists!");
       return;
     }
 
-    // 3. Add to the front using the spread operator
     setChoices([trimmedInput, ...choices]);
-    // 4. Clear the input
     setInput("");
   };
 
-  // Add suggested choices to the database
   const handleSubmit = async () => {
     if (!roomId) return;
     try {
-      // insert only new labels not already saved
       const newLabels = choices.filter((label) => !savedLabels.has(label));
       if (newLabels.length === 0) {
         return;
       }
+
       const payload = newLabels.map((label) => ({ poll_id: roomId, label }));
       const { data: inserted, error } = await supabase
         .from("choices")
@@ -98,31 +87,41 @@ export default function CreateChoicePage() {
           .from("polls")
           .update({ status: "ranking" })
           .eq("id", roomId);
-        navigate(`/ranking/${roomId}`);
       } else {
-        navigate(`/share/${roomId}`);
+        await supabase
+          .from("polls")
+          .update({ status: "collectingDone" })
+          .eq("id", roomId);
       }
 
       if (error) throw error;
+
       const insertedLabels = ((inserted as any) || []).map((i: any) => i.label);
       const newSaved = new Set(savedLabels);
       insertedLabels.forEach((l: string) => newSaved.add(l));
       setSavedLabels(newSaved);
+      
+      navigate(`/room/${roomId}`); // Navigate to the room with updated status
     } catch (e) {
       console.error("Failed to save choices", e);
     }
   };
 
-  // TODO: implement what to do on back button
-  const handleOnBack = () => {};
+  const handleOnBack = () => {
+    navigate(`/room/${roomId}`);
+  };
 
   if (loading) return <LoadingPage />;
+
+  const isCollectingDone = poll?.status === "collectingDone" || poll?.status === "rankingDone";
 
   return (
     <div className={styles.choiceContainer}>
       <div className={styles.titleWrapper}>
-        <BackButton onClick={handleOnBack} />
-        <Typography className={styles.title}>Topic: {topic}</Typography>
+        <IconButton onClick={handleOnBack} className={styles.backButton}>
+          <Back />
+        </IconButton>
+        <Typography className={styles.title}>Topic: {poll?.title}</Typography>
       </div>
       <div className={styles.choiceSection}>
         <div className={styles.textFieldContainer}>
@@ -135,11 +134,12 @@ export default function CreateChoicePage() {
             }}
             className={styles.choiceTextField}
             helperText={`${input.length} / ${MAX_CHOICE_LENGTH}`}
+            disabled={isCollectingDone || (!isHost && poll?.mode === "onlyMe")}
           />
           <div className={styles.suggestButtonWrapper}>
             <Button
               onClick={handleAddChoice}
-              disabled={input.length === 0}
+              disabled={input.length === 0 || isCollectingDone || (!isHost && poll?.mode === "onlyMe")}
               className={styles.choiceButton}
               variant="primary"
             >
@@ -156,8 +156,9 @@ export default function CreateChoicePage() {
                   key={i}
                   text={choice}
                   onDelete={() => {
-                    // Create a new array including everything EXCEPT the item at index 'i'
-                    setChoices(choices.filter((_, index) => index !== i));
+                    if (isHost || poll?.mode === "everyone") {
+                      setChoices(choices.filter((_, index) => index !== i));
+                    }
                   }}
                 />
               );
@@ -167,6 +168,7 @@ export default function CreateChoicePage() {
             onClick={handleSubmit}
             className={styles.choiceButton}
             variant="primary"
+            disabled={choices.length === 0 || isCollectingDone || (!isHost && poll?.mode === "onlyMe")}
           >
             Done
           </Button>

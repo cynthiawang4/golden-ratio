@@ -5,7 +5,8 @@ create table if not exists polls (
   title text not null,
   mode text not null check (mode in ('everyone', 'onlyMe')),
   status text not null default 'setup'
-    check (status in ('setup', 'collecting', 'ranking', 'revealed')),
+      check (status in ('setup', 'collecting', 'collectingDone', 'ranking', 'rankingDone', 'revealed')),
+  num_choices int default 3,
   created_at timestamptz default now()
 );
 

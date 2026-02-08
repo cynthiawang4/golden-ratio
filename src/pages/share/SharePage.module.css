@@ -17,6 +17,7 @@
 .pollCreated {
   font-family: 'Madimi One', cursive;
   font-size: 64px;
+  font-weight: 500;
   color: #f5d8c0;
   margin: 0.5rem 0;
 }
@@ -24,6 +25,7 @@
 .topic {
   font-family: 'Madimi One', cursive;
   font-size: 48px;
+  font-weight: 500;
   color: #F8AA69;
   margin: 0;
 }
