@@ -8,6 +8,7 @@ export default function useGoldenMusic() {
 
   const playSpecificPortion = useCallback(() => {
     const audio = audioRef.current;
+    console.log("AUDIO REF: ", audio);
     if (!audio) return;
 
     audio.currentTime = startTime;
