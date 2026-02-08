@@ -43,6 +43,28 @@
   }
   
 }
+.dropdownContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  padding: 0 2rem;
+  box-sizing: border-box;
+}
+.dropdownMenu {
+  width: 40px !important;
+  height: 55px !important;
+}
+.numberOfChoices {
+  font-size: 400;
+  color: var(--primary-color);
+  font-size: 2rem;
+  font-weight: 900;
+  font-family: 'Kulim park', sans-serif;
+}
+
 
 .buttonContainer {
   display: flex;
@@ -95,8 +117,8 @@
       height: 100px;
     }
 
-  & .forMeIcon {
-    width: 56px;
-    height: 65px;
-  }
+    & .forMeIcon {
+      width: 45px;
+      height: 60px;
+    }
 }

@@ -121,7 +121,7 @@ export default function CreateChoicePage() {
               <BaseButton
                 disabled={choices.length >= maxChoices}
                 onClick={handleSubmit}
-                className={styles.choiceButton}
+                className={styles.doneButton}
               >
                 Done
               </BaseButton>

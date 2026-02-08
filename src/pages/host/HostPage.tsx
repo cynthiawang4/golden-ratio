@@ -1,4 +1,4 @@
-import { TextField, Typography } from "@mui/material";
+import { TextField, Typography, Menu, MenuItem, Button } from "@mui/material";
 import styles from "./HostPage.module.css";
 import { useId, useState } from "react";
 import EveryoneIcon from "../../images/everyone.svg?react";
@@ -12,6 +12,18 @@ export default function HostPage() {
   const navigate = useNavigate();
   const [textInput, setTextInput] = useState<string>("");
   const id = useId();
+
+  //dropdown?
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget); // Sets the button as the anchor
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   // Probably can add db stuff here
   const navigateToChoicePage = () => {
@@ -55,6 +67,30 @@ export default function HostPage() {
           <Typography>Only Me!</Typography>
           <ForMeIcon className={styles.forMeIcon} />
         </BaseButton>
+      </div>
+      <div>
+        <div className={styles.dropdownContainer}>
+          <div className={styles.numberOfChoices}>
+            <p>
+              Number of choices: 
+            </p>
+          </div>
+          <div>
+            <Button className={styles.dropdownMenu} variant="contained" onClick={handleClick}>
+              None
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleClose}>1</MenuItem>
+              <MenuItem onClick={handleClose}>2</MenuItem>
+              <MenuItem onClick={handleClose}>3</MenuItem>
+              <MenuItem onClick={handleClose}>4</MenuItem>
+            </Menu>
+          </div>
+        </div>
       </div>
     </div>
   );
