@@ -20,9 +20,10 @@ interface CreateChoicePageProps {
   roomId?: string;
   poll: any;
   isHost: boolean;
+  onDoneChoices?: () => void;
 }
 
-export default function CreateChoicePage({ roomId, poll, isHost }: CreateChoicePageProps) {
+export default function CreateChoicePage({ roomId, poll, isHost, onDoneChoices, }: CreateChoicePageProps) {
   const navigate = useNavigate();
   const [input, setInput] = useState<string>("");
   const [choices, setChoices] = useState<any[]>([]);
@@ -70,38 +71,25 @@ export default function CreateChoicePage({ roomId, poll, isHost }: CreateChoiceP
 
   const handleSubmit = async () => {
     if (!roomId) return;
+
     try {
       const newLabels = choices.filter((label) => !savedLabels.has(label));
-      if (newLabels.length === 0) {
-        return;
+
+      if (newLabels.length > 0) {
+        const payload = newLabels.map((label) => ({
+          poll_id: roomId,
+          label,
+        }));
+
+        const { error } = await supabase.from("choices").insert(payload);
+        if (error) throw error;
       }
 
-      const payload = newLabels.map((label) => ({ poll_id: roomId, label }));
-      const { data: inserted, error } = await supabase
-        .from("choices")
-        .insert(payload)
-        .select("id,label");
-
-      if (poll.mode === "everyone") {
-        await supabase
-          .from("polls")
-          .update({ status: "ranking" })
-          .eq("id", roomId);
-      } else {
-        await supabase
-          .from("polls")
-          .update({ status: "collectingDone" })
-          .eq("id", roomId);
-      }
-
-      if (error) throw error;
-
-      const insertedLabels = ((inserted as any) || []).map((i: any) => i.label);
-      const newSaved = new Set(savedLabels);
-      insertedLabels.forEach((l: string) => newSaved.add(l));
-      setSavedLabels(newSaved);
-      
-      navigate(`/room/${roomId}`); // Navigate to the room with updated status
+      // Move to collectingDone
+      await supabase
+        .from("polls")
+        .update({ status: "collectingDone" })
+        .eq("id", roomId);
     } catch (e) {
       console.error("Failed to save choices", e);
     }
@@ -170,9 +158,17 @@ export default function CreateChoicePage({ roomId, poll, isHost }: CreateChoiceP
             variant="primary"
             disabled={choices.length === 0 || isCollectingDone || (!isHost && poll?.mode === "onlyMe")}
           >
-            Done
+            Upload
           </Button>
         </div>
+
+        <Button
+          onClick={onDoneChoices}
+          className={styles.choiceButton}
+          variant="primary"
+        >
+          Done
+        </Button>
       </div>
     </div>
   );

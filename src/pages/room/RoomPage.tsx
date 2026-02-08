@@ -5,6 +5,7 @@ import { Typography, CircularProgress, Button } from "@mui/material";
 import { supabase, auth } from "../../lib/supabaseClient";
 import SharePage from "../share/SharePage";
 import CreateChoicePage from "../choice/CreateChoicePage";
+import ThanksChoicesPage from "../thanks-choices/ThanksChoices";
 import RankingPage from "../ranking/RankingPage";
 import RevealPage from "../reveal/RevealPage";
 import ResultsPage from "../results/ResultsPage";
@@ -86,7 +87,6 @@ export default function RoomPage() {
   if (!poll) return <Typography>Poll not found</Typography>;
 
   const isHost = user?.id === poll.owner_id;
-  console.log("room", isHost)
 
   // ---------------- Render appropriate page ----------------
   const renderPage = () => {
@@ -102,19 +102,19 @@ export default function RoomPage() {
           />
         );
       case "collecting":
-        return <CreateChoicePage roomId={roomId} poll={poll} isHost={isHost} />;
+        return <CreateChoicePage roomId={roomId} poll={poll} isHost={isHost} onDoneChoices={() => updatePollStatus("collectingDone")}/>;
       case "collectingDone":
         return (
-          <SharePage 
+          <ThanksChoicesPage 
             roomId={roomId} 
             mode={poll.mode} 
             title={poll.title} 
             isHost={isHost} 
-            onStartChoices={() => updatePollStatus("ranking")} 
+            onStartVote={() => updatePollStatus("ranking")} 
           />
         );
       case "ranking":
-        return <RankingPage roomId={roomId} isHost={isHost} />;
+        return <RankingPage roomId={roomId} num_choices={poll.num_choices} isHost={isHost} onDoneVote={() => updatePollStatus("rankingDone")} />;
       case "rankingDone":
         return <RevealPage roomId={roomId} onReveal={handleReveal} />;
       case "revealed":

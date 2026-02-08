@@ -8,17 +8,18 @@ import { supabase } from "../../lib/supabaseClient";
 
 interface RankingPageProps {
   roomId?: string;
+  num_choices: number;
   isHost?: boolean;
+  onDoneVote?: () => void;
 }
 
-export default function RankingPage({ roomId: propRoomId, isHost }: RankingPageProps) {
+export default function RankingPage({ roomId: propRoomId, num_choices, isHost, onDoneVote }: RankingPageProps) {
   const { roomId: paramRoomId } = useParams();
   const roomId = propRoomId || paramRoomId;
   const [loading, setLoading] = useState<boolean>(true);
   const [choices, setChoices] = useState<any[]>([]);
   const [userChoices, setUserChoices] = useState<string[]>([]);
   const [topic, setTopic] = useState<string>("");
-  const [numChoicesToChoose, setNumChoicesToChoose] = useState<number>(2);
 
   useEffect(() => {
     if (!roomId) return;
@@ -30,14 +31,13 @@ export default function RankingPage({ roomId: propRoomId, isHost }: RankingPageP
         // Fetch poll info
         const { data: pollData, error: pollError } = await supabase
           .from("polls")
-          .select("title, num_choices, status, mode")
+          .select("title, status, mode")
           .eq("id", roomId)
           .single();
 
         if (pollError) throw pollError;
 
         setTopic(pollData?.title || "");
-        setNumChoicesToChoose(pollData?.num_choices || 2);
 
         // Fetch choices for this poll
         const { data: choicesData, error: choicesError } = await supabase
@@ -58,20 +58,8 @@ export default function RankingPage({ roomId: propRoomId, isHost }: RankingPageP
     fetchPollData();
   }, [roomId]);
 
-  // Validate if there are fewer choices than num_choices
-  useEffect(() => {
-    if (choices.length < numChoicesToChoose) {
-      setNumChoicesToChoose(choices.length);
-    }
-  }, [choices, numChoicesToChoose]);
-
   // Submit rankings to database
   const handleNext = async () => {
-    if (!isHost) {
-      // Guests shouldn't be able to submit rankings
-      return;
-    }
-
     const { data: user } = await supabase.auth.getUser();
     const userId = user?.user?.id;
     if (!userId) return;
@@ -90,16 +78,11 @@ export default function RankingPage({ roomId: propRoomId, isHost }: RankingPageP
     const { error } = await supabase.from('votes').insert(inserts);
     if (error) console.error(error);
 
-    // After submission, move to the results page (if the poll mode is "everyone")
-    if (isHost) {
-      await supabase
-        .from("polls")
-        .update({ status: "revealed" })
-        .eq("id", roomId);
-
-      // This could navigate to the results page after submission (if appropriate)
-      window.location.href = `/room/${roomId}/results`;
-    }
+    // After submission, move to rankingDone
+    await supabase
+      .from("polls")
+      .update({ status: "rankingDone" })
+      .eq("id", roomId);
   };
 
   const handleChoiceButton = (choiceText: string) => {
@@ -110,7 +93,7 @@ export default function RankingPage({ roomId: propRoomId, isHost }: RankingPageP
       }
 
       // 2. If we have space, just add it to the end
-      if (prev.length < numChoicesToChoose) {
+      if (prev.length < num_choices) {
         return [...prev, choiceText];
       }
 
@@ -129,7 +112,7 @@ export default function RankingPage({ roomId: propRoomId, isHost }: RankingPageP
         <Stack spacing={0.2}>
           <Typography className={styles.title}>Topic: {topic}</Typography>
           <Typography className={styles.subtitle}>
-            Choose {numChoicesToChoose} choices
+            Choose {num_choices} choices
           </Typography>
         </Stack>
         <div className={styles.choiceContainer}>
@@ -149,8 +132,15 @@ export default function RankingPage({ roomId: propRoomId, isHost }: RankingPageP
       </div>
       <ButtonColumn
         onNext={handleNext}
-        disabled={userChoices.length !== numChoicesToChoose}
+        disabled={userChoices.length !== num_choices}
       />
+      <Button
+        onClick={onDoneVote}
+        className={styles.choiceButton}
+        variant="primary"
+      >
+        Done
+      </Button>
     </div>
   );
 }

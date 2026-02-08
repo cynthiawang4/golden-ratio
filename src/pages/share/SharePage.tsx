@@ -20,7 +20,6 @@ export default function SharePage({
   onStartChoices,
 }: SharePageProps) {
   const [copied, setCopied] = useState(false);
-  console.log(isHost)
 
   // Share link always goes to /room/:roomId; RoomPage handles redirecting guests based on status
   const shareLink = `${window.location.origin}/room/${roomId ?? ""}`;
@@ -54,9 +53,11 @@ export default function SharePage({
         {copied && <span className={styles.copied}>Copied!</span>}
       </div>
 
-      <p style={{ textAlign: "center", marginTop: "1rem", fontSize: "0.9rem", color: "#999" }}>
-        Press the button below when you're ready to begin.
-      </p>
+      {isHost && (
+        <p style={{ textAlign: "center", marginTop: "1rem", fontSize: "0.9rem", color: "#999" }}>
+          Press the button below when you're ready to begin.
+        </p>
+      )}
 
       {isHost && mode === "everyone" && (
         <div className={styles.startButtonContainer}>
