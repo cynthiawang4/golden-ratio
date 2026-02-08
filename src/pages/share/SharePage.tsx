@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./SharePage.module.css";
 import CheckIcon from "../../images/check.svg?react";
 import CopyIcon from "../../images/copy.svg?react";
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 
 interface SharePageProps {
   roomId?: string;

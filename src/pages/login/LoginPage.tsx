@@ -5,7 +5,7 @@ import Back from '../../images/back.svg?react'
 import bgDetail from '../../images/background-detail.png'
 import starImg from '../../images/star.png'
 import googleIcon from '../../images/google.png'
-import styles from './loginpage.module.css'
+import styles from './LoginPage.module.css'
 
 export default function LoginPage() {
   const location = useLocation();
