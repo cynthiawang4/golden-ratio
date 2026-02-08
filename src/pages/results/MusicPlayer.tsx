@@ -11,7 +11,10 @@ export default function useGoldenMusic() {
     if (!audio) return;
 
     audio.currentTime = startTime;
-    audio.play().catch((e) => console.error("Autoplay blocked", e));
+    audio
+      .play()
+      .then(() => console.log("PLAYED GOLDEN"))
+      .catch((e) => console.error("Autoplay blocked", e));
 
     const handleTimeUpdate = () => {
       if (audio.currentTime >= endTime) {
