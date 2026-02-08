@@ -80,7 +80,9 @@ export default function ResultsPage({ roomId: propRoomId }: ResultsPageProps) {
         const topThree = computed.slice(0, 3);
         setResults(topThree);
 
-        play();
+        setTimeout(() => {
+          play();
+        }, 50);
       } catch (e) {
         console.error(e);
       } finally {
